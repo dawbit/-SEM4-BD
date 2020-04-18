@@ -1,0 +1,771 @@
+﻿mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| brednie            |
+| bro                |
+| iskierka           |
+| kotki              |
+| kumple             |
+| mysql              |
+| performance_schema |
+| przyjaciele        |
+| sobieraj_znajomi   |
+| webserv            |
++--------------------+
+11 rows in set (0.02 sec)
+
+@@@@@@@@@@@@@@@@@@@@@FUNKCJE MATEMATYCZNE@@@@@@@@@@@@@@@@@@@@@@@
+
+mysql> use bro
+Database changed
+mysql> select 5+9, 4-17, 7*8, 11/45, pow(2,10), sqrt(2);
++-----+------+-----+--------+-----------+--------------------+
+| 5+9 | 4-17 | 7*8 | 11/45  | pow(2,10) | sqrt(2)            |
++-----+------+-----+--------+-----------+--------------------+
+|  14 |  -13 |  56 | 0.2444 |      1024 | 1.4142135623730951 |
++-----+------+-----+--------+-----------+--------------------+
+
+mysql> select sin(3.141592653585/2), 4*atan(1),abs(-11), mod(23,5), log(2.7182817);
++-----------------------+-------------------+----------+-----------+-------------------+
+| sin(3.141592653585/2) | 4*atan(1)         | abs(-11) | mod(23,5) | log(2.7182817)    |
++-----------------------+-------------------+----------+-----------+-------------------+
+|                     1 | 3.141592653589793 |       11 |         3 | 0.999999952742557 |
++-----------------------+-------------------+----------+-----------+-------------------+
+
+mysql> select log(10,10);
++------------+
+| log(10,10) |
++------------+
+|          1 |
++------------+
+
+mysql> select log(1024)/log(2);
++------------------+
+| log(1024)/log(2) |
++------------------+
+|               10 |
++------------------+
+
+mysql> select pi(), exp(1);
++----------+-------------------+
+| pi()     | exp(1)            |
++----------+-------------------+
+| 3.141593 | 2.718281828459045 |
++----------+-------------------+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@SELECTY@@@@@@@@@@@@@@@@@@@@@@
+
+mysql> select id_o, imie, nazwisko, miasto, wiek, nk from osoby;
++------+-----------+--------------+------------+------+------+
+| id_o | imie      | nazwisko     | miasto     | wiek | nk   |
++------+-----------+--------------+------------+------+------+
+|    1 | Ola       | lis          | Zabrze     |   20 |   13 |
+|    2 | Ela       | Pis          | Mysiogóra  |   23 |   13 |
+|    3 | Adam      | Mickiewicz   | Nibylandia |   44 |   13 |
+|    4 | Jan       | Rolada       | Nibylandia |   19 |   13 |
+|    5 | Adam      | Kluski       | Nibylandia | NULL |   13 |
+|    6 | Olaf      | ziemniak     | Nibylandia |    0 |   13 |
+|    7 | Kajetan   | Kajetanowicz | Cieszyn    |   54 |   13 |
+|    8 | Robert    | Kubica       | Sosnowiec  |   44 |   13 |
+|    9 | Krzysztof | Hołowczyc    | Głogów     |   34 |   13 |
++------+-----------+--------------+------------+------+------+
+
+
+mysql> select imie, imie, imie from osoby;
++-----------+-----------+-----------+
+| imie      | imie      | imie      |
++-----------+-----------+-----------+
+| Ola       | Ola       | Ola       |
+| Ela       | Ela       | Ela       |
+| Adam      | Adam      | Adam      |
+| Jan       | Jan       | Jan       |
+| Adam      | Adam      | Adam      |
+| Olaf      | Olaf      | Olaf      |
+| Kajetan   | Kajetan   | Kajetan   |
+| Robert    | Robert    | Robert    |
+| Krzysztof | Krzysztof | Krzysztof |
++-----------+-----------+-----------+
+
+
+mysql> select imie AS Imię, miasto, wiek AS "ile ma lat" from osoby;
++-----------+------------+------------+
+| Imię      | miasto     | ile ma lat |
++-----------+------------+------------+
+| Ola       | Zabrze     |         20 |
+| Ela       | Mysiogóra  |         23 |
+| Adam      | Nibylandia |         44 |
+| Jan       | Nibylandia |         19 |
+| Adam      | Nibylandia |       NULL |
+| Olaf      | Nibylandia |          0 |
+| Kajetan   | Cieszyn    |         54 |
+| Robert    | Sosnowiec  |         44 |
+| Krzysztof | Głogów     |         34 |
++-----------+------------+------------+
+
+mysql> select imie AS Imię, miasto, wiek "ile ma lat" from osoby;
++-----------+------------+------------+
+| Imię      | miasto     | ile ma lat |
++-----------+------------+------------+
+| Ola       | Zabrze     |         20 |
+| Ela       | Mysiogóra  |         23 |
+| Adam      | Nibylandia |         44 |
+| Jan       | Nibylandia |         19 |
+| Adam      | Nibylandia |       NULL |
+| Olaf      | Nibylandia |          0 |
+| Kajetan   | Cieszyn    |         54 |
+| Robert    | Sosnowiec  |         44 |
+| Krzysztof | Głogów     |         34 |
++-----------+------------+------------+
+
+@@@@@@@@@@@@@@@@@@@@@@@SORTOWANIE@@@@@@@@@@@@@@@@@@@@@@@@@
+
+mysql> select imie AS Imię, miasto, wiek "ile ma lat" from osoby
+    -> order by nazwisko;
++-----------+------------+------------+
+| Imię      | miasto     | ile ma lat |
++-----------+------------+------------+
+| Krzysztof | Głogów     |         34 |
+| Kajetan   | Cieszyn    |         54 |
+| Adam      | Nibylandia |       NULL |
+| Robert    | Sosnowiec  |         44 |
+| Ola       | Zabrze     |         20 |
+| Adam      | Nibylandia |         44 |
+| Ela       | Mysiogóra  |         23 |
+| Jan       | Nibylandia |         19 |
+| Olaf      | Nibylandia |          0 |
++-----------+------------+------------+
+
+mysql> select imie AS Imię, miasto, wiek "ile ma lat", nazwisko from osoby
+    -> order by nazwisko;
++-----------+------------+------------+--------------+
+| Imię      | miasto     | ile ma lat | nazwisko     |
++-----------+------------+------------+--------------+
+| Krzysztof | Głogów     |         34 | Hołowczyc    |
+| Kajetan   | Cieszyn    |         54 | Kajetanowicz |
+| Adam      | Nibylandia |       NULL | Kluski       |
+| Robert    | Sosnowiec  |         44 | Kubica       |
+| Ola       | Zabrze     |         20 | lis          |
+| Adam      | Nibylandia |         44 | Mickiewicz   |
+| Ela       | Mysiogóra  |         23 | Pis          |
+| Jan       | Nibylandia |         19 | Rolada       |
+| Olaf      | Nibylandia |          0 | ziemniak     |
++-----------+------------+------------+--------------+
+
+mysql> select imie AS Imię, miasto, wiek "ile ma lat" from osoby
+    -> order by wiek;
++-----------+------------+------------+
+| Imię      | miasto     | ile ma lat |
++-----------+------------+------------+
+| Adam      | Nibylandia |       NULL |
+| Olaf      | Nibylandia |          0 |
+| Jan       | Nibylandia |         19 |
+| Ola       | Zabrze     |         20 |
+| Ela       | Mysiogóra  |         23 |
+| Krzysztof | Głogów     |         34 |
+| Adam      | Nibylandia |         44 |
+| Robert    | Sosnowiec  |         44 |
+| Kajetan   | Cieszyn    |         54 |
++-----------+------------+------------+
+
+
+mysql> select imie AS Imię, miasto, wiek "ile ma lat" from osoby
+    -> order by wiek desc;
++-----------+------------+------------+
+| Imię      | miasto     | ile ma lat |
++-----------+------------+------------+
+| Kajetan   | Cieszyn    |         54 |
+| Adam      | Nibylandia |         44 |
+| Robert    | Sosnowiec  |         44 |
+| Krzysztof | Głogów     |         34 |
+| Ela       | Mysiogóra  |         23 |
+| Ola       | Zabrze     |         20 |
+| Jan       | Nibylandia |         19 |
+| Olaf      | Nibylandia |          0 |
+| Adam      | Nibylandia |       NULL |
++-----------+------------+------------+
+
+
+mysql> select imie AS Imię, miasto, wiek "ile ma lat" from osoby
+    -> order by miasto, wiek;
++-----------+------------+------------+
+| Imię      | miasto     | ile ma lat |
++-----------+------------+------------+
+| Kajetan   | Cieszyn    |         54 |
+| Krzysztof | Głogów     |         34 |
+| Ela       | Mysiogóra  |         23 |
+| Adam      | Nibylandia |       NULL |
+| Olaf      | Nibylandia |          0 |
+| Jan       | Nibylandia |         19 |
+| Adam      | Nibylandia |         44 |
+| Robert    | Sosnowiec  |         44 |
+| Ola       | Zabrze     |         20 |
++-----------+------------+------------+
+
+mysql> select imie AS Imię, miasto, wiek "ile ma lat" from osoby
+    -> order by Imię;
++-----------+------------+------------+
+| Imię      | miasto     | ile ma lat |
++-----------+------------+------------+
+| Adam      | Nibylandia |         44 |
+| Adam      | Nibylandia |       NULL |
+| Ela       | Mysiogóra  |         23 |
+| Jan       | Nibylandia |         19 |
+| Kajetan   | Cieszyn    |         54 |
+| Krzysztof | Głogów     |         34 |
+| Ola       | Zabrze     |         20 |
+| Olaf      | Nibylandia |          0 |
+| Robert    | Sosnowiec  |         44 |
++-----------+------------+------------+
+
+
+mysql> select imie AS wiek, miasto, wiek imie from osoby
+    -> order by wiek;
++-----------+------------+------+
+| wiek      | miasto     | imie |
++-----------+------------+------+
+| Adam      | Nibylandia |   44 |
+| Adam      | Nibylandia | NULL |
+| Ela       | Mysiogóra  |   23 |
+| Jan       | Nibylandia |   19 |
+| Kajetan   | Cieszyn    |   54 |
+| Krzysztof | Głogów     |   34 |
+| Ola       | Zabrze     |   20 |
+| Olaf      | Nibylandia |    0 |
+| Robert    | Sosnowiec  |   44 |
++-----------+------------+------+
+
+@@@@@@@@@@@PIERWSZEŃSTWO MA ALIAS@@@@@@@@@@@@@@@@
+
+
+mysql> select imie AS wiek, miasto, wiek imie from osoby
+    -> order by 2 desc, 1 desc;
++-----------+------------+------+
+| wiek      | miasto     | imie |
++-----------+------------+------+
+| Ola       | Zabrze     |   20 |
+| Robert    | Sosnowiec  |   44 |
+| Olaf      | Nibylandia |    0 |
+| Jan       | Nibylandia |   19 |
+| Adam      | Nibylandia |   44 |
+| Adam      | Nibylandia | NULL |
+| Ela       | Mysiogóra  |   23 |
+| Krzysztof | Głogów     |   34 |
+| Kajetan   | Cieszyn    |   54 |
++-----------+------------+------+
+
+@@@@@@@@@@@@@@@@ 2 i 1 to wypisane kolumny, nie z domyślnej bazy@@@@@@@@@@
+
+
+mysql> select * from telefony
+    -> order by 4;
++------+-----------+-------------+----------+
+| id_t | numer     | typ         | operator |
++------+-----------+-------------+----------+
+|    1 | 123123123 | stacjonarny |          |
+|    5 | 500100200 | komórka     |          |
+|    2 | 32423424  | komórka     | orange   |
+|    4 | 333333333 | komórka     | ATM      |
+|    3 | 456456456 | komórka     | era      |
++------+-----------+-------------+----------+
+
+@@@@@@@@@@@@@@@@ SORTOWANIE PO ENUMIE SORTUJE PO NUMERZE W ENUMIE@@@@@@@@@@@@@@
+
+
+@@@@@@@@@@@@@@@@ SORTOWANIE WARUNKOWE @@@@@@@@@@@@@@@@@@@
+mysql> select * from osoby
+    -> where
+    -> wiek >=18;
++-----+------+-----------+--------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto     | nk   |
++-----+------+-----------+--------------+------+------------+------+
+|     |    1 | Ola       | lis          |   20 | Zabrze     |   13 |
+|     |    2 | Ela       | Pis          |   23 | Mysiogóra  |   13 |
+|     |    3 | Adam      | Mickiewicz   |   44 | Nibylandia |   13 |
+|     |    4 | Jan       | Rolada       |   19 | Nibylandia |   13 |
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn    |   13 |
+|     |    8 | Robert    | Kubica       |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów     |   13 |
++-----+------+-----------+--------------+------+------------+------+
+
+
+mysql> select * from osoby
+    -> where
+    -> wiek >=18 and wiek <=40;
++-----+------+-----------+-----------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko  | wiek | miasto     | nk   |
++-----+------+-----------+-----------+------+------------+------+
+|     |    1 | Ola       | lis       |   20 | Zabrze     |   13 |
+|     |    2 | Ela       | Pis       |   23 | Mysiogóra  |   13 |
+|     |    4 | Jan       | Rolada    |   19 | Nibylandia |   13 |
+|     |    9 | Krzysztof | Hołowczyc |   34 | Głogów     |   13 |
++-----+------+-----------+-----------+------+------------+------+
+
+
+mysql> select * from osoby
+    -> where
+    -> mod(id_o,2) = 0 or wiek >= 18 and wiek <=50;
++-----+------+-----------+------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko   | wiek | miasto     | nk   |
++-----+------+-----------+------------+------+------------+------+
+|     |    1 | Ola       | lis        |   20 | Zabrze     |   13 |
+|     |    2 | Ela       | Pis        |   23 | Mysiogóra  |   13 |
+|     |    3 | Adam      | Mickiewicz |   44 | Nibylandia |   13 |
+|     |    4 | Jan       | Rolada     |   19 | Nibylandia |   13 |
+|     |    6 | Olaf      | ziemniak   |    0 | Nibylandia |   13 |
+|     |    8 | Robert    | Kubica     |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc  |   34 | Głogów     |   13 |
++-----+------+-----------+------------+------+------------+------+
+
+@@@@@@@@@@@@@@@@@@@ WARUNKI BEZ NAWIASÓW LECĄ PO KOLEI @@@@@@@@@@@@@@@
+
+
+mysql> select * from osoby
+    -> where
+    -> (mod(id_o,2) = 0 or wiek >= 18) and wiek <=50;
++-----+------+-----------+------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko   | wiek | miasto     | nk   |
++-----+------+-----------+------------+------+------------+------+
+|     |    1 | Ola       | lis        |   20 | Zabrze     |   13 |
+|     |    2 | Ela       | Pis        |   23 | Mysiogóra  |   13 |
+|     |    3 | Adam      | Mickiewicz |   44 | Nibylandia |   13 |
+|     |    4 | Jan       | Rolada     |   19 | Nibylandia |   13 |
+|     |    6 | Olaf      | ziemniak   |    0 | Nibylandia |   13 |
+|     |    8 | Robert    | Kubica     |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc  |   34 | Głogów     |   13 |
++-----+------+-----------+------------+------+------------+------+
+
+mysql> select * from osoby
+    -> where
+    -> wiek between 25 and 50;
++-----+------+-----------+------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko   | wiek | miasto     | nk   |
++-----+------+-----------+------------+------+------------+------+
+|     |    3 | Adam      | Mickiewicz |   44 | Nibylandia |   13 |
+|     |    8 | Robert    | Kubica     |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc  |   34 | Głogów     |   13 |
++-----+------+-----------+------------+------+------------+------+
+
+
+mysql> select * from osoby
+    -> where
+    -> wiek between 25 and 50
+    -> order by 2 desc, 3;
++-----+------+-----------+------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko   | wiek | miasto     | nk   |
++-----+------+-----------+------------+------+------------+------+
+|     |    9 | Krzysztof | Hołowczyc  |   34 | Głogów     |   13 |
+|     |    8 | Robert    | Kubica     |   44 | Sosnowiec  |   13 |
+|     |    3 | Adam      | Mickiewicz |   44 | Nibylandia |   13 |
++-----+------+-----------+------------+------+------------+------+
+
+mysql> select imie Imię, miasto, wiek from osoby
+    -> where wiek not between 25 and 50
+    -> order by 2 desc, 3;
++---------+------------+------+
+| Imię    | miasto     | wiek |
++---------+------------+------+
+| Ola     | Zabrze     |   20 |
+| Olaf    | Nibylandia |    0 |
+| Jan     | Nibylandia |   19 |
+| Ela     | Mysiogóra  |   23 |
+| Kajetan | Cieszyn    |   54 |
++---------+------------+------+
+
+@@@@@@@@@@@@ PRAWA DEMORGANA O ALTERNATYWIE NEGACJI ITD@@@@@@@@@@@@@@@
+
+
+mysql> select * from osoby
+    -> where
+    -> miasto = "ZabrzE";
++-----+------+------+----------+------+--------+------+
+| nk2 | id_o | imie | nazwisko | wiek | miasto | nk   |
++-----+------+------+----------+------+--------+------+
+|     |    1 | Ola  | lis      |   20 | Zabrze |   13 |
++-----+------+------+----------+------+--------+------+
+
+@@@@@@@@@@@@ WIELKOSĆ LITER NIE MA ZNACZENIA @@@@@@@@@@@@@@@@
+
+
+mysql> select * from osoby
+    -> where
+    -> nazwisko > "Adamczyk";
++-----+------+-----------+--------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto     | nk   |
++-----+------+-----------+--------------+------+------------+------+
+|     |    1 | Ola       | lis          |   20 | Zabrze     |   13 |
+|     |    2 | Ela       | Pis          |   23 | Mysiogóra  |   13 |
+|     |    3 | Adam      | Mickiewicz   |   44 | Nibylandia |   13 |
+|     |    4 | Jan       | Rolada       |   19 | Nibylandia |   13 |
+|     |    5 | Adam      | Kluski       | NULL | Nibylandia |   13 |
+|     |    6 | Olaf      | ziemniak     |    0 | Nibylandia |   13 |
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn    |   13 |
+|     |    8 | Robert    | Kubica       |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów     |   13 |
++-----+------+-----------+--------------+------+------------+------+
+
+
+mysql> select * from osoby
+    -> where
+    -> miasto <> "GlIWiCe";
++-----+------+-----------+--------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto     | nk   |
++-----+------+-----------+--------------+------+------------+------+
+|     |    1 | Ola       | lis          |   20 | Zabrze     |   13 |
+|     |    2 | Ela       | Pis          |   23 | Mysiogóra  |   13 |
+|     |    3 | Adam      | Mickiewicz   |   44 | Nibylandia |   13 |
+|     |    4 | Jan       | Rolada       |   19 | Nibylandia |   13 |
+|     |    5 | Adam      | Kluski       | NULL | Nibylandia |   13 |
+|     |    6 | Olaf      | ziemniak     |    0 | Nibylandia |   13 |
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn    |   13 |
+|     |    8 | Robert    | Kubica       |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów     |   13 |
++-----+------+-----------+--------------+------+------------+------+
+
+
+mysql> select * from osoby
+    -> where
+    -> miasto != "NiByLandia";
++-----+------+-----------+--------------+------+-----------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto    | nk   |
++-----+------+-----------+--------------+------+-----------+------+
+|     |    1 | Ola       | lis          |   20 | Zabrze    |   13 |
+|     |    2 | Ela       | Pis          |   23 | Mysiogóra |   13 |
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn   |   13 |
+|     |    8 | Robert    | Kubica       |   44 | Sosnowiec |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów    |   13 |
++-----+------+-----------+--------------+------+-----------+------+
+
+
+
+mysql> select * from osoby
+    -> where
+    -> miasto like "NiByLandia";
++-----+------+------+------------+------+------------+------+
+| nk2 | id_o | imie | nazwisko   | wiek | miasto     | nk   |
++-----+------+------+------------+------+------------+------+
+|     |    3 | Adam | Mickiewicz |   44 | Nibylandia |   13 |
+|     |    4 | Jan  | Rolada     |   19 | Nibylandia |   13 |
+|     |    5 | Adam | Kluski     | NULL | Nibylandia |   13 |
+|     |    6 | Olaf | ziemniak   |    0 | Nibylandia |   13 |
++-----+------+------+------------+------+------------+------+
+
+@@@@@@@@@@@@@@@@@@@@ = i > nie działa z wyrażeniami regularnymi, like działa lepiej @@@@@@@@@@@
+
+
+mysql> select * from osoby
+    -> where
+    -> imie like "___";
++-----+------+------+----------+------+------------+------+
+| nk2 | id_o | imie | nazwisko | wiek | miasto     | nk   |
++-----+------+------+----------+------+------------+------+
+|     |    1 | Ola  | lis      |   20 | Zabrze     |   13 |
+|     |    2 | Ela  | Pis      |   23 | Mysiogóra  |   13 |
+|     |    4 | Jan  | Rolada   |   19 | Nibylandia |   13 |
++-----+------+------+----------+------+------------+------+
+
+@@@@@@@@@@@@@@@@ IMONA 3 LITEROWE @@@@@@@@@@@@@@@
+
+
+mysql> select * from osoby
+    -> where
+    -> imie not like "___";
++-----+------+-----------+--------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto     | nk   |
++-----+------+-----------+--------------+------+------------+------+
+|     |    3 | Adam      | Mickiewicz   |   44 | Nibylandia |   13 |
+|     |    5 | Adam      | Kluski       | NULL | Nibylandia |   13 |
+|     |    6 | Olaf      | ziemniak     |    0 | Nibylandia |   13 |
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn    |   13 |
+|     |    8 | Robert    | Kubica       |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów     |   13 |
++-----+------+-----------+--------------+------+------------+------+
+
+
+
+mysql> select * from osoby
+    -> where
+    -> imie like "j%";
++-----+------+------+----------+------+------------+------+
+| nk2 | id_o | imie | nazwisko | wiek | miasto     | nk   |
++-----+------+------+----------+------+------------+------+
+|     |    4 | Jan  | Rolada   |   19 | Nibylandia |   13 |
++-----+------+------+----------+------+------------+------+
+
+mysql> select * from osoby
+    -> where
+    -> imie like "%a";
++-----+------+------+----------+------+-----------+------+
+| nk2 | id_o | imie | nazwisko | wiek | miasto    | nk   |
++-----+------+------+----------+------+-----------+------+
+|     |    1 | Ola  | lis      |   20 | Zabrze    |   13 |
+|     |    2 | Ela  | Pis      |   23 | Mysiogóra |   13 |
++-----+------+------+----------+------+-----------+------+
+
+@@@@@@@@@@@@@@@ IMIONA NA DANĄ LITERĘ @@@@@@@@@@@
+
+
+mysql> select * from osoby
+    -> where
+    -> imie between "d%" and "l%";
++-----+------+-----------+--------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto     | nk   |
++-----+------+-----------+--------------+------+------------+------+
+|     |    2 | Ela       | Pis          |   23 | Mysiogóra  |   13 |
+|     |    4 | Jan       | Rolada       |   19 | Nibylandia |   13 |
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn    |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów     |   13 |
++-----+------+-----------+--------------+------+------------+------+
+
+@@@@@@@@@@@@@@@@@@@ IMIONA ZACZYNAJĄCE SIĘ OD LITER @@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@ % TO DOWOLNY CIĄG ZNAKÓW, W TYM PUSTY @@@@@@@@@@@@
+
+mysql> select * from osoby
+    -> where
+    -> imie like "%t%" and imie not like "t%" and imie not like "%t";
++-----+------+-----------+--------------+------+---------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto  | nk   |
++-----+------+-----------+--------------+------+---------+------+
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów  |   13 |
++-----+------+-----------+--------------+------+---------+------+
+
+
+
+mysql> select * from osoby
+    -> where
+    -> imie in ("ela", "marta", "jan");
++-----+------+------+----------+------+------------+------+
+| nk2 | id_o | imie | nazwisko | wiek | miasto     | nk   |
++-----+------+------+----------+------+------------+------+
+|     |    2 | Ela  | Pis      |   23 | Mysiogóra  |   13 |
+|     |    4 | Jan  | Rolada   |   19 | Nibylandia |   13 |
++-----+------+------+----------+------+------------+------+
+
+
+mysql> select * from osoby
+    -> where
+    -> nazwisko not in ("pis");
++-----+------+-----------+--------------+------+------------+------+
+| nk2 | id_o | imie      | nazwisko     | wiek | miasto     | nk   |
++-----+------+-----------+--------------+------+------------+------+
+|     |    1 | Ola       | lis          |   20 | Zabrze     |   13 |
+|     |    3 | Adam      | Mickiewicz   |   44 | Nibylandia |   13 |
+|     |    4 | Jan       | Rolada       |   19 | Nibylandia |   13 |
+|     |    5 | Adam      | Kluski       | NULL | Nibylandia |   13 |
+|     |    6 | Olaf      | ziemniak     |    0 | Nibylandia |   13 |
+|     |    7 | Kajetan   | Kajetanowicz |   54 | Cieszyn    |   13 |
+|     |    8 | Robert    | Kubica       |   44 | Sosnowiec  |   13 |
+|     |    9 | Krzysztof | Hołowczyc    |   34 | Głogów     |   13 |
++-----+------+-----------+--------------+------+------------+------+
+
+mysql> select * from osoby
+    -> where
+    -> nazwisko in ("k%", "b%");
+Empty set (0.00 sec)
+@@@@@@@ SZUKA NAZWISKA Z @@@@@@
+
+@@@@@@@@@@@@@@@@@@@@@@@ SZUKANIE CIĄGÓW W ZBIORACH @@@@@@@@@@@@@@@
+
+mysql> select * from osoby
+    -> limit 3;
++-----+------+------+------------+------+------------+------+
+| nk2 | id_o | imie | nazwisko   | wiek | miasto     | nk   |
++-----+------+------+------------+------+------------+------+
+|     |    1 | Ola  | lis        |   20 | Zabrze     |   13 |
+|     |    2 | Ela  | Pis        |   23 | Mysiogóra  |   13 |
+|     |    3 | Adam | Mickiewicz |   44 | Nibylandia |   13 |
++-----+------+------+------------+------+------------+------+
+
+mysql> select * from osoby
+    -> limit 4,2;
++-----+------+------+----------+------+------------+------+
+| nk2 | id_o | imie | nazwisko | wiek | miasto     | nk   |
++-----+------+------+----------+------+------------+------+
+|     |    5 | Adam | Kluski   | NULL | Nibylandia |   13 |
+|     |    6 | Olaf | ziemniak |    0 | Nibylandia |   13 |
++-----+------+------+----------+------+------------+------+
+
+@@@@@@@ limit ile_pominąć, ile_następnych_wyświetlić @@@@@@
+
+
+@@@@@@@@@@@LIMITOWANIE WYNIKÓW @@@@@@@@@@@@@@@@
+
+
+@@@@@@@@@@@@@ IMPORTOWANIE \. O:\nazwa_bazy.sql @@@@@@@@@@@@@@@@@@
+
+mysql> use swiat
+
+mysql> show tables;
++-----------------+
+| Tables_in_swiat |
++-----------------+
+| city            |
+| country         |
+| countrylanguage |
++-----------------+
+
+mysql> desc country;
++----------------+---------------------------------------------------------------------------------------+------+-----+---------+-------+
+| Field          | Type                                                                                  | Null | Key | Default | Extra |
++----------------+---------------------------------------------------------------------------------------+------+-----+---------+-------+
+| Code           | char(3)                                                                               | NO   | PRI |         |       |
+| Name           | char(52)                                                                              | NO   |     |         |       |
+| Continent      | enum('Asia','Europe','North America','Africa','Oceania','Antarctica','South America') | NO   |     | Asia    |       |
+| Region         | char(26)                                                                              | NO   |     |         |       |
+| SurfaceArea    | float(10,2)                                                                           | NO   |     | 0.00    |       |
+| IndepYear      | smallint(6)                                                                           | YES  |     | NULL    |       |
+| Population     | int(11)                                                                               | NO   |     | 0       |       |
+| LifeExpectancy | float(3,1)                                                                            | YES  |     | NULL    |       |
+| GNP            | float(10,2)                                                                           | YES  |     | NULL    |       |
+| GNPOld         | float(10,2)                                                                           | YES  |     | NULL    |       |
+| LocalName      | char(45)                                                                              | NO   |     |         |       |
+| GovernmentForm | char(45)                                                                              | NO   |     |         |       |
+| HeadOfState    | char(60)                                                                              | YES  |     | NULL    |       |
+| Capital        | int(11)                                                                               | YES  |     | NULL    |       |
+| Code2          | char(2)                                                                               | NO   |     |         |       |
++----------------+---------------------------------------------------------------------------------------+------+-----+---------+-------+
+
+mysql> desc country \G
+*************************** 1. row ***************************
+  Field: Code
+   Type: char(3)
+   Null: NO
+    Key: PRI
+Default:
+  Extra:
+*************************** 2. row ***************************
+  Field: Name
+   Type: char(52)
+   Null: NO
+    Key:
+Default:
+  Extra:
+*************************** 3. row ***************************
+  Field: Continent
+   Type: enum('Asia','Europe','North America','Africa','Oceania','Antarctica','South America')
+   Null: NO
+    Key:
+Default: Asia
+  Extra:
+*************************** 4. row ***************************
+  Field: Region
+   Type: char(26)
+   Null: NO
+    Key:
+Default:
+  Extra:
+*************************** 5. row ***************************
+  Field: SurfaceArea
+   Type: float(10,2)
+   Null: NO
+    Key:
+Default: 0.00
+  Extra:
+*************************** 6. row ***************************
+  Field: IndepYear
+   Type: smallint(6)
+   Null: YES
+    Key:
+Default: NULL
+  Extra:
+*************************** 7. row ***************************
+  Field: Population
+   Type: int(11)
+   Null: NO
+    Key:
+Default: 0
+  Extra:
+*************************** 8. row ***************************
+  Field: LifeExpectancy
+   Type: float(3,1)
+   Null: YES
+    Key:
+Default: NULL
+  Extra:
+*************************** 9. row ***************************
+  Field: GNP
+   Type: float(10,2)
+   Null: YES
+    Key:
+Default: NULL
+  Extra:
+*************************** 10. row ***************************
+  Field: GNPOld
+   Type: float(10,2)
+   Null: YES
+    Key:
+Default: NULL
+  Extra:
+*************************** 11. row ***************************
+  Field: LocalName
+   Type: char(45)
+   Null: NO
+    Key:
+Default:
+  Extra:
+*************************** 12. row ***************************
+  Field: GovernmentForm
+   Type: char(45)
+   Null: NO
+    Key:
+Default:
+  Extra:
+*************************** 13. row ***************************
+  Field: HeadOfState
+   Type: char(60)
+   Null: YES
+    Key:
+Default: NULL
+  Extra:
+*************************** 14. row ***************************
+  Field: Capital
+   Type: int(11)
+   Null: YES
+    Key:
+Default: NULL
+  Extra:
+*************************** 15. row ***************************
+  Field: Code2
+   Type: char(2)
+   Null: NO
+    Key:
+Default:
+  Extra:
+
+
+
+mysql> select name kraj, HeadOfState głowa, Population/surfacearea gęstość from country
+    -> where name like "p%"
+    -> order by 3 desc;
++------------------+--------------------------------+------------+
+| kraj             | głowa                          | gęstość    |
++------------------+--------------------------------+------------+
+| Palestine        | Yasser (Yasir) Arafat          | 495.604922 |
+| Puerto Rico      | George W. Bush                 | 435.943662 |
+| Philippines      | Gloria Macapagal-Arroyo        | 253.223333 |
+| Pakistan         | Mohammad Rafiq Tarar           | 196.563224 |
+| Poland           | Aleksander Kwasniewski         | 119.578036 |
+| Portugal         | Jorge Samp?io                  | 108.690831 |
+| Palau            | Kuniwo Nakamura                |  41.394336 |
+| Panama           | Mireya Elisa Moscoso Rodríguez |  37.819299 |
+| Peru             | Valentin Paniagua Corazao      |  19.967072 |
+| Paraguay         | Luis Ángel González Macchi     |  13.511919 |
+| Papua New Guinea | Elisabeth II                   |  10.385878 |
+| Pitcairn         | Elisabeth II                   |   1.020408 |
++------------------+--------------------------------+------------+
+
+@@@@@@@@@@@@@@@@ jakieś szukanie @@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+
+
+
+
+

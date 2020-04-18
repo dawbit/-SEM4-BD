@@ -1,0 +1,330 @@
+use swiat
+
+mysql> select name kraj, continent kontynent, headofstate szef, population lud
+    -> from country
+    -> order by 4 desc
+    -> limit 1;
++-------+-----------+-------------+------------+
+| kraj  | kontynent | szef        | lud        |
++-------+-----------+-------------+------------+
+| China | Asia      | Jiang Zemin | 1277558000 |
++-------+-----------+-------------+------------+
+
+Kraj z najwiêksz¹ iloœci¹ ludnoœci.
+
+mysql> select name kraj, continent kontynent, headofstate szef, population lud
+    -> from country
+    -> where
+    -> population = (select max(population) from country);
++-------+-----------+-------------+------------+
+| kraj  | kontynent | szef        | lud        |
++-------+-----------+-------------+------------+
+| China | Asia      | Jiang Zemin | 1277558000 |
++-------+-----------+-------------+------------+
+
+To samo inaczej. Gdyby by³y chiny i coœ jeszcze, to zwróci³by obydwa, a tamto tylko 1.
+
+mysql> select name kraj, continent kontynent, headofstate szef, population lud
+    -> from country
+    -> where
+    -> population = (select avg(population) from country);
+Empty set (0.02 sec)
+
+œrednia wysz³a z u³amkiem, wiêc nie znalaz³o takiej ludnoœci.
+
+mysql> select name kraj, continent kontynent, headofstate szef, population lud
+    -> from country
+    -> where
+    -> population < (select avg(population) from country) + 2e6
+    -> and
+    -> population > (select avg(population) from country) - 2e6
+    -> order by 4;
++-------------+---------------+---------------------------+----------+
+| kraj        | kontynent     | szef                      | lud      |
++-------------+---------------+---------------------------+----------+
+| Nepal       | Asia          | Gyanendra Bir Bikram      | 23930000 |
+| North Korea | Asia          | Kim Jong-il               | 24039000 |
+| Venezuela   | South America | Hugo Chávez Frías         | 24170000 |
+| Uzbekistan  | Asia          | Islam Karimov             | 24318000 |
+| Peru        | South America | Valentin Paniagua Corazao | 25662000 |
++-------------+---------------+---------------------------+----------+
+
+œrednia iloœæ populacji.
+
+mysql> select name kraj, continent kontynent, headofstate szef, population lud
+    -> from country
+    -> where
+    -> abs(population - (select avg(population) from country)) < 2e6
+    -> order by 4;
++-------------+---------------+---------------------------+----------+
+| kraj        | kontynent     | szef                      | lud      |
++-------------+---------------+---------------------------+----------+
+| Nepal       | Asia          | Gyanendra Bir Bikram      | 23930000 |
+| North Korea | Asia          | Kim Jong-il               | 24039000 |
+| Venezuela   | South America | Hugo Chávez Frías         | 24170000 |
+| Uzbekistan  | Asia          | Islam Karimov             | 24318000 |
+| Peru        | South America | Valentin Paniagua Corazao | 25662000 |
++-------------+---------------+---------------------------+----------+
+
+
+œrednia iloœæ populacji.
+
+
+mysql> select k.name kraj, m.name stolica, continent kontynent, headofstate szef, k.population lud
+    -> from country k, city m
+    -> where
+    -> capital = id
+    -> and
+    -> k.population between
+    -> (select avg(population) from country) - 2e6
+    -> and
+    -> (select avg(population) from country) + 2e6
+    -> order by 5;
++-------------+-----------+---------------+---------------------------+----------+
+| kraj        | stolica   | kontynent     | szef                      | lud      |
++-------------+-----------+---------------+---------------------------+----------+
+| Nepal       | Kathmandu | Asia          | Gyanendra Bir Bikram      | 23930000 |
+| North Korea | Pyongyang | Asia          | Kim Jong-il               | 24039000 |
+| Venezuela   | Caracas   | South America | Hugo Chávez Frías         | 24170000 |
+| Uzbekistan  | Toskent   | Asia          | Islam Karimov             | 24318000 |
+| Peru        | Lima      | South America | Valentin Paniagua Corazao | 25662000 |
++-------------+-----------+---------------+---------------------------+----------+
+
+wykorzystanie between
+
+wypisz dane pañstwa o najwiêkszej ludnoœci w Europie
+
+mysql> select name kraj, continent kontynent, headofstate szef, population lud
+    -> from country
+    -> where
+    -> continent = "europe"
+    -> and
+    -> population =
+    -> (select max(population) from country where continent = "europe");
++--------------------+-----------+----------------+-----------+
+| kraj               | kontynent | szef           | lud       |
++--------------------+-----------+----------------+-----------+
+| Russian Federation | Europe    | Vladimir Putin | 146934000 |
++--------------------+-----------+----------------+-----------+
+
+wypisz nazwy pañstw, ich stolice, powierzchnie i kontynenty, dla pañstw których powierzchnia jest najwiêksza na danym kontynencie
+
+mysql> select k.name kraj, m.name stolica, surfacearea pow, continent kontynent
+    -> from country k, city m
+    -> where
+    -> capital = id
+    -> and
+    -> surfacearea = (select max(surfacearea) from country p where p.continent = k.continent)
+    -> order by 3;
++--------------------+----------+-------------+---------------+
+| kraj               | stolica  | pow         | kontynent     |
++--------------------+----------+-------------+---------------+
+| Sudan              | Khartum  |  2505813.00 | Africa        |
+| Australia          | Canberra |  7741220.00 | Oceania       |
+| Brazil             | Brasília |  8547403.00 | South America |
+| China              | Peking   |  9572900.00 | Asia          |
+| Canada             | Ottawa   |  9970610.00 | North America |
+| Russian Federation | Moscow   | 17075400.00 | Europe        |
++--------------------+----------+-------------+---------------+
+
+join zamiast przecinka powinno daæ jeszcze coœ z nullem, antarktyda.
+
+mysql> select k.name kraj, m.name stolica, max(surfacearea) pow, continent kontynent
+    -> from country k, city m
+    -> where
+    -> capital = id
+    -> group by 4
+    -> order by 3;
++----------------------+--------------+-------------+---------------+
+| kraj                 | stolica      | pow         | kontynent     |
++----------------------+--------------+-------------+---------------+
+| Algeria              | Alger        |  2505813.00 | Africa        |
+| American Samoa       | Fagatogo     |  7741220.00 | Oceania       |
+| Argentina            | Buenos Aires |  8547403.00 | South America |
+| Afghanistan          | Kabul        |  9572900.00 | Asia          |
+| Netherlands Antilles | Willemstad   |  9970610.00 | North America |
+| Netherlands          | Amsterdam    | 17075400.00 | Europe        |
++----------------------+--------------+-------------+---------------+
+
+Coœ siê zjeba³o.
+
+jak siê nazywa kraj, forma rz¹du, d³ugoœæ ¿ycia dla ka¿dej formy rz¹du wypisaæ kraj, w którym ¿yje siê najd³u¿ej
+
+mysql> select name kraj, governmentform rz¹dy, lifeexpectancy ¿ycie
+    -> from country p
+    -> where
+    -> lifeexpectancy =
+    -> (select max(lifeexpectancy)
+    -> from country k
+    -> where
+    -> k.governmentform = p.governmentform)
+    -> order by 3;
++---------------------------+----------------------------------------------+-------+
+| kraj                      | rz¹dy                                        | ¿ycie |
++---------------------------+----------------------------------------------+-------+
+| Afghanistan               | Islamic Emirate                              |  45.9 |
+| East Timor                | Administrated by the UN                      |  46.0 |
+| Western Sahara            | Occupied by Marocco                          |  49.8 |
+| Samoa                     | Parlementary Monarchy                        |  69.2 |
+| Iran                      | Islamic Republic                             |  69.7 |
+| Cook Islands              | Nonmetropolitan Territory of New Zealand     |  71.1 |
+| Palestine                 | Autonomous Area                              |  71.4 |
+| China                     | People'sRepublic                             |  71.4 |
+| Qatar                     | Monarchy                                     |  72.4 |
+| Bahrain                   | Monarchy (Emirate)                           |  73.0 |
+| Brunei                    | Monarchy (Sultanate)                         |  73.6 |
+| United Arab Emirates      | Emirate Federation                           |  74.1 |
+| French Polynesia          | Nonmetropolitan Territory of France          |  74.8 |
+| Libyan Arab Jamahiriya    | Socialistic State                            |  75.5 |
+| Puerto Rico               | Commonwealth of the US                       |  75.6 |
+| Kuwait                    | Constitutional Monarchy (Emirate)            |  76.1 |
+| Cuba                      | Socialistic Republic                         |  76.2 |
+| Saint Pierre and Miquelon | Territorial Collectivity of France           |  77.6 |
+| Austria                   | Federal Republic                             |  77.7 |
+| Virgin Islands, U.S.      | US Territory                                 |  78.1 |
+| Martinique                | Overseas Department of France                |  78.3 |
+| Faroe Islands             | Part of Denmark                              |  78.4 |
+| Aruba                     | Nonmetropolitan Territory of The Netherlands |  78.4 |
+| Gibraltar                 | Dependent Territory of the UK                |  79.0 |
+| Switzerland               | Federation                                   |  79.6 |
+| Australia                 | Constitutional Monarchy, Federation          |  79.8 |
+| Japan                     | Constitutional Monarchy                      |  80.7 |
+| San Marino                | Republic                                     |  81.1 |
+| Macao                     | Special Administrative Region of China       |  81.6 |
+| Andorra                   | Parliamentary Coprincipality                 |  83.5 |
++---------------------------+----------------------------------------------+-------+
+
+
+
+mysql> select name kraj, population, continent kontynent
+    -> from country k
+    -> where
+    -> population =
+    -> (select min(population)
+    -> from
+    -> country p
+    -> where
+    -> p.continent = k.continent);
++----------------------------------------------+------------+---------------+
+| kraj                                         | population | kontynent     |
++----------------------------------------------+------------+---------------+
+| Falkland Islands                             |       2000 | South America |
+| Maldives                                     |     286000 | Asia          |
+| Saint Pierre and Miquelon                    |       7000 | North America |
+| Holy See (Vatican City State)                |       1000 | Europe        |
+| Antarctica                                   |          0 | Antarctica    |
+| Bouvet Island                                |          0 | Antarctica    |
+| British Indian Ocean Territory               |          0 | Africa        |
+| South Georgia and the South Sandwich Islands |          0 | Antarctica    |
+| Heard Island and McDonald Islands            |          0 | Antarctica    |
+| French Southern territories                  |          0 | Antarctica    |
+| United States Minor Outlying Islands         |          0 | Oceania       |
++----------------------------------------------+------------+---------------+
+
+
+mysql> select name kraj, governmentform frzadow, lifeexpectancy "sr wiek"
+    -> from country k
+    -> where
+    -> lifeexpectancy =
+    -> (select max(lifeexpectancy)
+    -> from country p
+    -> where
+    -> k.governmentform = p.governmentform)
+    -> order by 3;
++---------------------------+----------------------------------------------+---------+
+| kraj                      | frzadow                                      | sr wiek |
++---------------------------+----------------------------------------------+---------+
+| Afghanistan               | Islamic Emirate                              |    45.9 |
+| East Timor                | Administrated by the UN                      |    46.0 |
+| Western Sahara            | Occupied by Marocco                          |    49.8 |
+| Samoa                     | Parlementary Monarchy                        |    69.2 |
+| Iran                      | Islamic Republic                             |    69.7 |
+| Cook Islands              | Nonmetropolitan Territory of New Zealand     |    71.1 |
+| Palestine                 | Autonomous Area                              |    71.4 |
+| China                     | People'sRepublic                             |    71.4 |
+| Qatar                     | Monarchy                                     |    72.4 |
+| Bahrain                   | Monarchy (Emirate)                           |    73.0 |
+| Brunei                    | Monarchy (Sultanate)                         |    73.6 |
+| United Arab Emirates      | Emirate Federation                           |    74.1 |
+| French Polynesia          | Nonmetropolitan Territory of France          |    74.8 |
+| Libyan Arab Jamahiriya    | Socialistic State                            |    75.5 |
+| Puerto Rico               | Commonwealth of the US                       |    75.6 |
+| Kuwait                    | Constitutional Monarchy (Emirate)            |    76.1 |
+| Cuba                      | Socialistic Republic                         |    76.2 |
+| Saint Pierre and Miquelon | Territorial Collectivity of France           |    77.6 |
+| Austria                   | Federal Republic                             |    77.7 |
+| Virgin Islands, U.S.      | US Territory                                 |    78.1 |
+| Martinique                | Overseas Department of France                |    78.3 |
+| Faroe Islands             | Part of Denmark                              |    78.4 |
+| Aruba                     | Nonmetropolitan Territory of The Netherlands |    78.4 |
+| Gibraltar                 | Dependent Territory of the UK                |    79.0 |
+| Switzerland               | Federation                                   |    79.6 |
+| Australia                 | Constitutional Monarchy, Federation          |    79.8 |
+| Japan                     | Constitutional Monarchy                      |    80.7 |
+| San Marino                | Republic                                     |    81.1 |
+| Macao                     | Special Administrative Region of China       |    81.6 |
+| Andorra                   | Parliamentary Coprincipality                 |    83.5 |
++---------------------------+----------------------------------------------+---------+
+30 rows in set (0.08 sec)
+
+
+kontynent, populacja, powierzchnia i kraj, populacja jest najwiêksza dla danej formy rz¹du, powierzchnia jest wiêksza od œredniej pow. na kontynencie kraju
+
+
+mysql> select name kraj, population, surfacearea pow, governmentform rz¹dy
+    -> from country
+    -> where
+    -> population =
+    -> (select max(population) from country k where
+    -> k.governmentform = country.governmentform)
+    -> and
+    -> surfacearea >
+    -> (select avg(surfacearea) from country k where
+    -> k.continent = country.continent)
+    -> order by 1;
++------------------------+------------+-------------+-------------------------------------+
+| kraj                   | population | pow         | rz¹dy                               |
++------------------------+------------+-------------+-------------------------------------+
+| Afghanistan            |   22720000 |   652090.00 | Islamic Emirate                     |
+| Antarctica             |          0 | 13120000.00 | Co-administrated                    |
+| Canada                 |   31147000 |  9970610.00 | Constitutional Monarchy, Federation |
+| China                  | 1277558000 |  9572900.00 | People'sRepublic                    |
+| Greenland              |      56000 |  2166090.00 | Part of Denmark                     |
+| India                  | 1013662000 |  3287263.00 | Federal Republic                    |
+| Indonesia              |  212107000 |  1904569.00 | Republic                            |
+| Iran                   |   67702000 |  1648195.00 | Islamic Republic                    |
+| Libyan Arab Jamahiriya |    5605000 |  1759540.00 | Socialistic State                   |
+| Saudi Arabia           |   21607000 |  2149690.00 | Monarchy                            |
++------------------------+------------+-------------+-------------------------------------+
+10 rows in set (0.13 sec)
+
+Ciê¿ko zweryfikowaæ, hgw czy jest dobrze.
+
+kraj, gêstoœæ zaludnienia, kontynent, dla ka¿dego kontynentu kraj najbardziej gêsty
+
+
+mysql> select name kraj, continent gdzie, population/surfacearea gêstoœæ
+    -> from country k
+    -> where
+    -> population/surfacearea =
+    -> (select max(p.population/p.surfacearea)
+    -> from country p
+    -> where
+    -> p.continent = k.continent)
+    -> order by 3;
++----------------------------------------------+---------------+--------------+
+| kraj                                         | gdzie         | gêstoœæ      |
++----------------------------------------------+---------------+--------------+
+| French Southern territories                  | Antarctica    |     0.000000 |
+| Heard Island and McDonald Islands            | Antarctica    |     0.000000 |
+| South Georgia and the South Sandwich Islands | Antarctica    |     0.000000 |
+| Bouvet Island                                | Antarctica    |     0.000000 |
+| Antarctica                                   | Antarctica    |     0.000000 |
+| Ecuador                                      | South America |    44.597106 |
+| Mauritius                                    | Africa        |   567.647059 |
+| Nauru                                        | Oceania       |   571.428571 |
+| Bermuda                                      | North America |  1226.415094 |
+| Monaco                                       | Europe        | 22666.666667 |
+| Macao                                        | Asia          | 26277.777778 |
++----------------------------------------------+---------------+--------------+
+11 rows in set (0.11 sec)

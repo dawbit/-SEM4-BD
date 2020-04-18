@@ -1,0 +1,2 @@
+order by 2, kiedy istnieje kolumna o nazwie 2;
+order by column(2); ale chyba nie

@@ -1,0 +1,53 @@
+tee archiwizacja 
+notee koniec archiwizacji
+prawy alt zaznaczanie blokowe
+\. poprzednie polecenie
+create database baza;
+use baza
+show tables;
+
+mysql> create table osoby(
+    -> id_o tinyint unsigned not null auto_increment,
+    -> imie char(12) not null,
+    -> nazwisko char(21) not null,
+    -> wiek tinyint,
+    -> miasto char(31) default "Nibylandia",
+    -> primary key (id_o))
+    -> engine=innodb
+    -> default character set utf8 collate utf8_unicode_ci;
+
+
+
+
+systemy sk³adowania danych
+szybsza bez regu³ sk³adowania danych domyslny
+wolniejsza z regu³ami sk³adowania danych engine=innodb
+
+default character set utf8 
+default character set utf8 collate utf8_unicode_ci;
+
+desc osoby (nazwa tabelki);
+
+ create table telefony(
+    -> id_t tinyint unsigned not null auto_increment,
+    -> numer char(9) not null,
+    -> typ enum("stacjonarny", "komórka") not null default "komórka",
+    -> operator enum("play", "orange", "ATM", "era") not null,
+    -> primary key(id_t))
+    -> engine=innodb
+    -> default character set utf8 collate utf8_unicode_ci;
+
+create table scal(
+    -> id_s tinyint unsigned not null auto_increment,
+    -> id_o tinyint unsigned not null,
+    -> id_t tinyint unsigned not null,
+    -> primary key(id_s),
+    -> foreign key(id_o) references osoby(id_o),
+    -> foreign key(id_t) references telefony(id_t))
+    -> engine=innodb
+    -> default character set utf8 collate utf8_unicode_ci;
+
+insert scal value (1,1,2), (2,1,4), (3,2,2), (4,3,1);
+
+insert telefony (numer, operator) value
+    -> ("32423424", "orange"), (456456456, "era"), (333333333, "ATM");

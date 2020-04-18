@@ -1,0 +1,234 @@
+mysql> use znajomi
+Database changed
+mysql> set global log_bin_trust_function_creators = 1;
+
+mysql> delimiter //
+mysql> select 7*8;
+    -> //
++-----+
+| 7*8 |
++-----+
+|  56 |
++-----+
+
+
+mysql> create function iloczyn(a int, b int)
+    -> returns int
+    -> begin
+    -> declare c int;
+    -> set c = a*b;
+    -> return c;
+    -> end //
+
+Tworzenie funkcji
+
+mysql> select iloczyn (7,8)//
++---------------+
+| iloczyn (7,8) |
++---------------+
+|            56 |
++---------------+
+
+wywo³anie funkcji
+
+
+mysql> select iloczyn(pi(),10)//
++------------------+
+| iloczyn(pi(),10) |
++------------------+
+|               30 |
++------------------+
+
+mysql> select iloczyn(pi(),"drzwi")//
++-----------------------+
+| iloczyn(pi(),"drzwi") |
++-----------------------+
+|                     0 |
++-----------------------+
+1 row in set, 1 warning (0.00 sec)
+
+delimiter jest do sesji, a funkcja do bazy
+
+
+
+mysql> show create function iloczyn\G
+*************************** 1. row ***************************
+            Function: iloczyn
+            sql_mode:
+     Create Function: CREATE DEFINER=`root`@`localhost` FUNCTION `iloczyn`(a int, b int) RETURNS int(11)
+begin
+declare c int;
+set c = a*b;
+return c;
+end
+character_set_client: cp852
+collation_connection: cp852_general_ci
+  Database Collation: latin1_swedish_ci
+
+Informacja o funkcji.
+
+mysql> select name from mysql.proc
+    -> where db = "znajomi"
+    -> and
+    -> type = "function";
+    ->
+    -> //
++---------+
+| name    |
++---------+
+| iloczyn |
++---------+
+
+
+wyci¹ganie rzeczy z poziomu innej bazy
+bez wylogowywania trzeba dawaæ //
+
+
+mysql> drop function iloczyn;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+kasowanie funkcji
+
+
+funkcja wiosna: dla arg. imiê i nazwisko tworzy maila imie.nazwisko@wiosna.eu
+
+
+mysql> create function wiosna(a varchar(20), b varchar(20))
+    -> returns varchar(60)
+    -> begin
+    -> declare c varchar(60);
+    -> set c = concat(a,".",b,"@wiosna.eq");
+    -> return c;
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> select wiosna("robert", "kubica");//
++----------------------------+
+| wiosna("robert", "kubica") |
++----------------------------+
+| robert.kubica@wiosna.eq    |
++----------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select imie, nazwisko, miasto, wiosna(imie,nazwisko) mail
+    -> from osoby;//
++--------+----------+-----------------+---------------------------+
+| imie   | nazwisko | miasto          | mail                      |
++--------+----------+-----------------+---------------------------+
+| Artur  | Pselka   | Gliwice         | Artur.Pselka@wiosna.eq    |
+| Micha³ | Mirowski | Tarnowskie Góry | Micha?.Mirowski@wiosna.eq |
+| Monika | Rydek    | Gliwice         | Monika.Rydek@wiosna.eq    |
+| Oliwia | Rymon    | Knurów          | Oliwia.Rymon@wiosna.eq    |
+| Micha³ | Zebrzyk  | Gliwice         | Micha?.Zebrzyk@wiosna.eq  |
++--------+----------+-----------------+---------------------------+
+5 rows in set, 2 warnings (0.01 sec)
+
+b³êdy z kodowaniem
+
+
+
+mysql> drop function wiosna;//
+
+mysql> create function wiosna(a varchar(20) charset utf8, b varchar(20) charset utf8)
+    -> returns varchar(60) charset utf8
+    -> begin
+    -> declare c varchar(60) charset utf8;
+    -> set c = concat(a,".",b,"@wiosna.eq");
+    -> return c;
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> select imie, nazwisko, miasto, wiosna(imie,nazwisko) mail
+    -> from osoby //
++--------+----------+-----------------+---------------------------+
+| imie   | nazwisko | miasto          | mail                      |
++--------+----------+-----------------+---------------------------+
+| Artur  | Pselka   | Gliwice         | Artur.Pselka@wiosna.eq    |
+| Micha³ | Mirowski | Tarnowskie Góry | Micha³.Mirowski@wiosna.eq |
+| Monika | Rydek    | Gliwice         | Monika.Rydek@wiosna.eq    |
+| Oliwia | Rymon    | Knurów          | Oliwia.Rymon@wiosna.eq    |
+| Micha³ | Zebrzyk  | Gliwice         | Micha³.Zebrzyk@wiosna.eq  |
++--------+----------+-----------------+---------------------------+
+
+
+mysql> drop function wiosna;//
+Query OK, 0 rows affected (0.00 sec)
+
+kasujemy wiosnê, bo zakaz peda³owania.
+
+funkcja delta, która dla danych a, b i c zwracaæ bêdzie rozwi¹zania równania kwadratowego
+ax^2 + bx + c = 0
+
+create function delta( a double, b double, c double)
+returns
+char(40)
+begin
+declare delta, x1,x2 double;
+declare odp char(60);
+set delta = b*b - 4*a*c;
+if a = 0 then
+set odp = "To nie jest f. kwadratowa";
+elseif delta < 0 then
+set odp = "Równanie nie ma pierwiastków rzecz.";
+elseif delta = 0 then
+set x1 = -b/(2*a);
+set odp = concat("x0 = ", x1);
+else
+set x1 = (-b-sqrt(delta))/(2*a);
+set x2 = (-b+sqrt(delta))/(2*a);
+set odp = concat("x1 = ", x1, "x2 = ", x2);
+end if;
+return odp;
+end //
+
+
+
+mysql>  select delta(pi(),log(11),-7.345646)//
++------------------------------------------+
+| delta(pi(),log(11),-7.345646)            |
++------------------------------------------+
+| x1 = -1.9576566998726797x2 = 1.194382928 |
++------------------------------------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

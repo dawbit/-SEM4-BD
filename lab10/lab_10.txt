@@ -1,0 +1,730 @@
+-- Widok - wirtualna tabela która trzyma zapytanie które formuje tabele
+-- potem można wybierać sobie dane z widoku które są jakby tą wirtulną tabelą
+
+mysql> create view miasta as
+    -> select id, name, district, population, countrycode
+    -> from city;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_swiat |
++-----------------+
+| city            |
+| country         |
+| countrylanguage |
+| miasta          |
++-----------------+
+4 rows in set (0.00 sec)
+
+mysql> show full tables;
++-----------------+------------+
+| Tables_in_swiat | Table_type |
++-----------------+------------+
+| city            | BASE TABLE |
+| country         | BASE TABLE |
+| countrylanguage | BASE TABLE |
+| miasta          | VIEW       |
++-----------------+------------+
+
+mysql> select * from miasta where countrycode = "pol";
++------+---------------------+---------------------+------------+-------------+
+| id   | name                | district            | population | countrycode |
++------+---------------------+---------------------+------------+-------------+
+| 2928 | Warszawa            | Mazowieckie         |    1615369 | POL         |
+| 2929 | Lódz                | Lodzkie             |     800110 | POL         |
+| 2930 | Kraków              | Malopolskie         |     738150 | POL         |
+| 2931 | Wroclaw             | Dolnoslaskie        |     636765 | POL         |
+| 2932 | Poznan              | Wielkopolskie       |     576899 | POL         |
+| 2933 | Gdansk              | Pomorskie           |     458988 | POL         |
+| 2934 | Szczecin            | Zachodnio-Pomorskie |     416988 | POL         |
+| 2935 | Bydgoszcz           | Kujawsko-Pomorskie  |     386855 | POL         |
+| 2936 | Lublin              | Lubelskie           |     356251 | POL         |
+| 2937 | Katowice            | Slaskie             |     345934 | POL         |
+| 2938 | Bialystok           | Podlaskie           |     283937 | POL         |
+| 2939 | Czestochowa         | Slaskie             |     257812 | POL         |
+| 2940 | Gdynia              | Pomorskie           |     253521 | POL         |
+| 2941 | Sosnowiec           | Slaskie             |     244102 | POL         |
+| 2942 | Radom               | Mazowieckie         |     232262 | POL         |
+| 2943 | Kielce              | Swietokrzyskie      |     212383 | POL         |
+| 2944 | Gliwice             | Slaskie             |     212164 | POL         |
+| 2945 | Torun               | Kujawsko-Pomorskie  |     206158 | POL         |
+| 2946 | Bytom               | Slaskie             |     205560 | POL         |
+| 2947 | Zabrze              | Slaskie             |     200177 | POL         |
+| 2948 | Bielsko-Biala       | Slaskie             |     180307 | POL         |
+| 2949 | Olsztyn             | Warminsko-Mazurskie |     170904 | POL         |
+| 2950 | Rzeszów             | Podkarpackie        |     162049 | POL         |
+| 2951 | Ruda Slaska         | Slaskie             |     159665 | POL         |
+| 2952 | Rybnik              | Slaskie             |     144582 | POL         |
+| 2953 | Walbrzych           | Dolnoslaskie        |     136923 | POL         |
+| 2954 | Tychy               | Slaskie             |     133178 | POL         |
+| 2955 | Dabrowa Górnicza    | Slaskie             |     131037 | POL         |
+| 2956 | Plock               | Mazowieckie         |     131011 | POL         |
+| 2957 | Elblag              | Warminsko-Mazurskie |     129782 | POL         |
+| 2958 | Opole               | Opolskie            |     129553 | POL         |
+| 2959 | Gorzów Wielkopolski | Lubuskie            |     126019 | POL         |
+| 2960 | Wloclawek           | Kujawsko-Pomorskie  |     123373 | POL         |
+| 2961 | Chorzów             | Slaskie             |     121708 | POL         |
+| 2962 | Tarnów              | Malopolskie         |     121494 | POL         |
+| 2963 | Zielona Góra        | Lubuskie            |     118182 | POL         |
+| 2964 | Koszalin            | Zachodnio-Pomorskie |     112375 | POL         |
+| 2965 | Legnica             | Dolnoslaskie        |     109335 | POL         |
+| 2966 | Kalisz              | Wielkopolskie       |     106641 | POL         |
+| 2967 | Grudziadz           | Kujawsko-Pomorskie  |     102434 | POL         |
+| 2968 | Slupsk              | Pomorskie           |     102370 | POL         |
+| 2969 | Jastrzebie-Zdrój    | Slaskie             |     102294 | POL         |
+| 2970 | Jaworzno            | Slaskie             |      97929 | POL         |
+| 2971 | Jelenia Góra        | Dolnoslaskie        |      93901 | POL         |
++------+---------------------+---------------------+------------+-------------+
+44 rows in set (0.00 sec)
+
+mysql> create view miasta (id, kod, nazwa, ludność) as
+    -> select id, countrycode, name, population
+    -> from city;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from miasta where countrycode = "pol";
+ERROR 1054 (42S22): Unknown column 'countrycode' in 'where clause' -- istnieje jako kod a nie countrycode
+
+mysql> select * from miasta where kod = "pol";
++------+-----+---------------------+---------+
+| id   | kod | nazwa               | ludność |
++------+-----+---------------------+---------+
+| 2928 | POL | Warszawa            | 1615369 |
+| 2929 | POL | Lódz                |  800110 |
+| 2930 | POL | Kraków              |  738150 |
+| 2931 | POL | Wroclaw             |  636765 |
+| 2932 | POL | Poznan              |  576899 |
+| 2933 | POL | Gdansk              |  458988 |
+| 2934 | POL | Szczecin            |  416988 |
+| 2935 | POL | Bydgoszcz           |  386855 |
+| 2936 | POL | Lublin              |  356251 |
+| 2937 | POL | Katowice            |  345934 |
+| 2938 | POL | Bialystok           |  283937 |
+| 2939 | POL | Czestochowa         |  257812 |
+| 2940 | POL | Gdynia              |  253521 |
+| 2941 | POL | Sosnowiec           |  244102 |
+| 2942 | POL | Radom               |  232262 |
+| 2943 | POL | Kielce              |  212383 |
+| 2944 | POL | Gliwice             |  212164 |
+| 2945 | POL | Torun               |  206158 |
+| 2946 | POL | Bytom               |  205560 |
+| 2947 | POL | Zabrze              |  200177 |
+| 2948 | POL | Bielsko-Biala       |  180307 |
+| 2949 | POL | Olsztyn             |  170904 |
+| 2950 | POL | Rzeszów             |  162049 |
+| 2951 | POL | Ruda Slaska         |  159665 |
+| 2952 | POL | Rybnik              |  144582 |
+| 2953 | POL | Walbrzych           |  136923 |
+| 2954 | POL | Tychy               |  133178 |
+| 2955 | POL | Dabrowa Górnicza    |  131037 |
+| 2956 | POL | Plock               |  131011 |
+| 2957 | POL | Elblag              |  129782 |
+| 2958 | POL | Opole               |  129553 |
+| 2959 | POL | Gorzów Wielkopolski |  126019 |
+| 2960 | POL | Wloclawek           |  123373 |
+| 2961 | POL | Chorzów             |  121708 |
+| 2962 | POL | Tarnów              |  121494 |
+| 2963 | POL | Zielona Góra        |  118182 |
+| 2964 | POL | Koszalin            |  112375 |
+| 2965 | POL | Legnica             |  109335 |
+| 2966 | POL | Kalisz              |  106641 |
+| 2967 | POL | Grudziadz           |  102434 |
+| 2968 | POL | Slupsk              |  102370 |
+| 2969 | POL | Jastrzebie-Zdrój    |  102294 |
+| 2970 | POL | Jaworzno            |   97929 |
+| 2971 | POL | Jelenia Góra        |   93901 |
++------+-----+---------------------+---------+
+44 rows in set (0.00 sec)
+
+-- aliasy
+mysql> select kod kraj, nazwa miasto from miasta where kod = "pol";
++------+---------------------+
+| kraj | miasto              |
++------+---------------------+
+| POL  | Warszawa            |
+| POL  | Lódz                |
+| POL  | Kraków              |
+| POL  | Wroclaw             |
+| POL  | Poznan              |
+| POL  | Gdansk              |
+| POL  | Szczecin            |
+| POL  | Bydgoszcz           |
+| POL  | Lublin              |
+| POL  | Katowice            |
+| POL  | Bialystok           |
+| POL  | Czestochowa         |
+| POL  | Gdynia              |
+| POL  | Sosnowiec           |
+| POL  | Radom               |
+| POL  | Kielce              |
+| POL  | Gliwice             |
+| POL  | Torun               |
+| POL  | Bytom               |
+| POL  | Zabrze              |
+| POL  | Bielsko-Biala       |
+| POL  | Olsztyn             |
+| POL  | Rzeszów             |
+| POL  | Ruda Slaska         |
+| POL  | Rybnik              |
+| POL  | Walbrzych           |
+| POL  | Tychy               |
+| POL  | Dabrowa Górnicza    |
+| POL  | Plock               |
+| POL  | Elblag              |
+| POL  | Opole               |
+| POL  | Gorzów Wielkopolski |
+| POL  | Wloclawek           |
+| POL  | Chorzów             |
+| POL  | Tarnów              |
+| POL  | Zielona Góra        |
+| POL  | Koszalin            |
+| POL  | Legnica             |
+| POL  | Kalisz              |
+| POL  | Grudziadz           |
+| POL  | Slupsk              |
+| POL  | Jastrzebie-Zdrój    |
+| POL  | Jaworzno            |
+| POL  | Jelenia Góra        |
++------+---------------------+
+44 rows in set (0.00 sec)
+
+-- widok populacja, w którym miasta są na "so" z liczbą ludności mniejszą o 10000, kod pisany jest małymi a nazwa wielkimi literami
+
+mysql> create view populacja as
+    -> select lower(countrycode) kod, upper(name) MIASTO, population - 1e4 ludność
+    -> from city
+    -> where
+    -> name like "so%";
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from populacja;
++-----+-----------------------------+---------+
+| kod | MIASTO                      | ludność |
++-----+-----------------------------+---------+
+| aia | SOUTH HILL                  |   -9039 |
+| bra | SOROCABA                    |  456823 |
+| bra | SOBRAL                      |  136005 |
+| gbr | SOUTHAMPTON                 |  206000 |
+| gbr | SOUTHEND-ON-SEA             |  166000 |
+| gbr | SOLIHULL                    |   84531 |
+| gbr | SOUTHPORT                   |   80959 |
+| bgr | SOFIJA                      | 1112302 |
+| slv | SOYAPANGO                   |  119800 |
+| zaf | SOWETO                      |  894165 |
+| zaf | SOSHANGUVE                  |  232727 |
+| phl | SORSOGON                    |   82512 |
+| geo | SOHUMI                      |  101700 |
+| ind | SOLAPUR (SHOLAPUR)          |  594215 |
+| ind | SOUTH DUM DUM               |  222811 |
+| ind | SONIPAT (SONEPAT)           |  133922 |
+| jpn | SOKA                        |  212768 |
+| col | SOLEDAD                     |  285058 |
+| col | SOACHA                      |  262058 |
+| col | SOGAMOSO                    |   97728 |
+| kor | SONGNAM                     |  859094 |
+| kor | SOSAN                       |  124746 |
+| mex | SOLEDAD DE GRACIANO SÁNCHEZ |  169956 |
+| nga | SOKOTO                      |  194900 |
+| pol | SOSNOWIEC                   |  234102 |
+| deu | SOLINGEN                    |  155583 |
+| tha | SONGKHLA                    |   84900 |
+| tun | SOUSSE                      |  135900 |
+| blr | SOLIGORSK                   |   91000 |
+| rus | SOTšI                       |  348600 |
+| rus | SOLIKAMSK                   |   96000 |
+| usa | SOUTH BEND                  |   97789 |
++-----+-----------------------------+---------+
+32 rows in set (0.00 sec)
+
+-- widok po ile jest miast w danym kodzie
+
+mysql> create view ile_miast as
+    -> select countrycode kod, count(*) ile
+    -> from city
+    -> group by 1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from ile_miast;
+
+mysql> select * from ile_miast
+    -> where kod like "p%"
+    -> order by 2, 1;
++-----+-----+
+| kod | ile |
++-----+-----+
+| PCN |   1 |
+| PLW |   1 |
+| PNG |   1 |
+| PAN |   2 |
+| PYF |   2 |
+| PRT |   5 |
+| PRY |   5 |
+| PSE |   6 |
+| PRI |   9 |
+| PRK |  13 |
+| PER |  22 |
+| POL |  44 |
+| PAK |  59 |
+| PHL | 136 |
++-----+-----+
+
+-- widok: kod kraju, nazwa kraju, kod miasta (kraju, w którym ono leży) i nazwę miasta
+-- warunek: nazwy miasta i państwa są takie same
+
+-- jeśli chcemy żeby miasto było z tego samego państwa
+mysql> create view bracia as
+    -> select code kod, k.name kraj, countrycode "kod miasta", m.name miasto
+    -> from country k, city m
+    -> where
+    -> countrycode = code
+    -> and
+    -> k.name = m.name
+    -> order by 1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from bracia;
++-----+------------+------------+------------+
+| kod | kraj       | kod miasta | miasto     |
++-----+------------+------------+------------+
+| DJI | Djibouti   | DJI        | Djibouti   |
+| GIB | Gibraltar  | GIB        | Gibraltar  |
+| KWT | Kuwait     | KWT        | Kuwait     |
+| MAC | Macao      | MAC        | Macao      |
+| SGP | Singapore  | SGP        | Singapore  |
+| SMR | San Marino | SMR        | San Marino |
++-----+------------+------------+------------+
+6 rows in set (0.00 sec)
+
+-- a tutaj jest sobie miasto w filipinach które nazywa się mexico i jest takie samo jak państwo mexico
+mysql> create view bracia as
+    -> select code kod, k.name kraj, countrycode "kod miasta", m.name miasto
+    -> from country k, city m
+    -> where
+    -> k.name = m.name
+    -> order by 1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from bracia;
++-----+------------+------------+------------+
+| kod | kraj       | kod miasta | miasto     |
++-----+------------+------------+------------+
+| ARM | Armenia    | COL        | Armenia    |
+| DJI | Djibouti   | DJI        | Djibouti   |
+| GIB | Gibraltar  | GIB        | Gibraltar  |
+| KWT | Kuwait     | KWT        | Kuwait     |
+| MAC | Macao      | MAC        | Macao      |
+| MEX | Mexico     | PHL        | Mexico     |
+| SGP | Singapore  | SGP        | Singapore  |
+| SMR | San Marino | SMR        | San Marino |
++-----+------------+------------+------------+
+8 rows in set (0.09 sec)
+
+-- złączenie bracia i country
+-- bracia 1, 2 country: localname
+
+mysql> select kod, kraj, localname
+    -> from bracia, country
+    -> where kod = code;
++-----+------------+---------------------------------------+
+| kod | kraj       | localname                             |
++-----+------------+---------------------------------------+
+| ARM | Armenia    | Hajastan                              |
+| DJI | Djibouti   | Djibouti/Jibuti                       |
+| GIB | Gibraltar  | Gibraltar                             |
+| KWT | Kuwait     | Al-Kuwayt                             |
+| MAC | Macao      | Macau/Aomen                           |
+| MEX | Mexico     | México                                |
+| SGP | Singapore  | Singapore/Singapura/Xinjiapo/Singapur |
+| SMR | San Marino | San Marino                            |
++-----+------------+---------------------------------------+
+
+-- łączenie dwóch widoków
+mysql> select b.kod, ile
+    -> from bracia b, ile_miast i
+    -> where
+    -> b.kod = i.kod;
++-----+-----+
+| kod | ile |
++-----+-----+
+| ARM |   3 |
+| DJI |   1 |
+| GIB |   1 |
+| KWT |   3 |
+| MAC |   1 |
+| MEX | 173 |
+| SGP |   1 |
+| SMR |   2 |
++-----+-----+
+8 rows in set (0.10 sec)
+
+-- widok: kraj, stolica
+-- warunek: populacja kraju jest ponadprzeciętna
+mysql> create view duże as
+    -> select k.name kraj, m.name stolica, k.population ludność
+    -> from country k, city m
+    -> where
+    -> capital = id
+    -> and
+    -> k.population > (select avg(population) from country);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from duże order by 3;
++---------------------------------------+-------------------+------------+
+| kraj                                  | stolica           | ludność    |
++---------------------------------------+-------------------+------------+
+| Peru                                  | Lima              |   25662000 |
+| Morocco                               | Rabat             |   28351000 |
+| Sudan                                 | Khartum           |   29490000 |
+| Kenya                                 | Nairobi           |   30080000 |
+| Canada                                | Ottawa            |   31147000 |
+| Algeria                               | Alger             |   31471000 |
+| Tanzania                              | Dodoma            |   33517000 |
+| Argentina                             | Buenos Aires      |   37032000 |
+| Poland                                | Warszawa          |   38653600 |
+| Spain                                 | Madrid            |   39441700 |
+| South Africa                          | Pretoria          |   40377000 |
+| Colombia                              | Santafé de Bogotá |   42321000 |
+| Myanmar                               | Rangoon (Yangon)  |   45611000 |
+| South Korea                           | Seoul             |   46844000 |
+| Ukraine                               | Kyiv              |   50456000 |
+| Congo, The Democratic Republic of the | Kinshasa          |   51654000 |
+| Italy                                 | Roma              |   57680000 |
+| France                                | Paris             |   59225700 |
+| United Kingdom                        | London            |   59623400 |
+| Thailand                              | Bangkok           |   61399000 |
+| Ethiopia                              | Addis Abeba       |   62565000 |
+| Turkey                                | Ankara            |   66591000 |
+| Iran                                  | Teheran           |   67702000 |
+| Egypt                                 | Cairo             |   68470000 |
+| Philippines                           | Manila            |   75967000 |
+| Vietnam                               | Hanoi             |   79832000 |
+| Germany                               | Berlin            |   82164700 |
+| Mexico                                | Ciudad de México  |   98881000 |
+| Nigeria                               | Abuja             |  111506000 |
+| Japan                                 | Tokyo             |  126714000 |
+| Bangladesh                            | Dhaka             |  129155000 |
+| Russian Federation                    | Moscow            |  146934000 |
+| Pakistan                              | Islamabad         |  156483000 |
+| Brazil                                | Brasília          |  170115000 |
+| Indonesia                             | Jakarta           |  212107000 |
+| United States                         | Washington        |  278357000 |
+| India                                 | New Delhi         | 1013662000 |
+| China                                 | Peking            | 1277558000 |
++---------------------------------------+-------------------+------------+
+38 rows in set (0.00 sec)
+
+-- widok wagi: kraj, populacja, waga -> dla państw o ludności
+-- powyżej 100 000 000: 6, dla pow. 50 000 000: 4, reszta 2
+
+mysql> create view wagi as
+    -> select name kraj, population ludność,
+    -> if (population > 1e8, 6, if(population > 5e7, 4, 2)) waga
+    -> from country;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from widok order by 3 desc;
++----------------------------------------------+------------+------+
+| kraj                                         | ludność    | waga |
++----------------------------------------------+------------+------+
+| Bangladesh                                   |  129155000 |    6 |
+| United States                                |  278357000 |    6 |
+| Nigeria                                      |  111506000 |    6 |
+| Japan                                        |  126714000 |    6 |
+| Russian Federation                           |  146934000 |    6 |
+| China                                        | 1277558000 |    6 |
+| India                                        | 1013662000 |    6 |
+| Indonesia                                    |  212107000 |    6 |
+| Brazil                                       |  170115000 |    6 |
+| Pakistan                                     |  156483000 |    6 |
+| Congo, The Democratic Republic of the        |   51654000 |    4 |
+| Germany                                      |   82164700 |    4 |
+| Philippines                                  |   75967000 |    4 |
+| Ukraine                                      |   50456000 |    4 |
+| Thailand                                     |   61399000 |    4 |
+| United Kingdom                               |   59623400 |    4 |
+| Ethiopia                                     |   62565000 |    4 |
+| France                                       |   59225700 |    4 |
+| Vietnam                                      |   79832000 |    4 |
+| Italy                                        |   57680000 |    4 |
+| Egypt                                        |   68470000 |    4 |
+| Turkey                                       |   66591000 |    4 |
+| Iran                                         |   67702000 |    4 |
+| Mexico                                       |   98881000 |    4 |
+| Equatorial Guinea                            |     453000 |    2 |
+| Poland                                       |   38653600 |    2 |
+| Pitcairn                                     |         50 |    2 |
+| Northern Mariana Islands                     |      78000 |    2 |
+| Puerto Rico                                  |    3869000 |    2 |
+| Portugal                                     |    9997600 |    2 |
+| Qatar                                        |     599000 |    2 |
+| Saint Vincent and the Grenadines             |     114000 |    2 |
+| Saint Lucia                                  |     154000 |    2 |
+| Saint Kitts and Nevis                        |      38000 |    2 |
+| Saint Helena                                 |       6000 |    2 |
+| Rwanda                                       |    7733000 |    2 |
+| Romania                                      |   22455500 |    2 |
+| Réunion                                      |     699000 |    2 |
+| French Polynesia                             |     235000 |    2 |
+| Sweden                                       |    8861400 |    2 |
+| French Guiana                                |     181000 |    2 |
+| Peru                                         |   25662000 |    2 |
+| Myanmar                                      |   45611000 |    2 |
+| Mozambique                                   |   19680000 |    2 |
+| Montserrat                                   |      11000 |    2 |
+| Mongolia                                     |    2662000 |    2 |
+| Monaco                                       |      34000 |    2 |
+| Moldova                                      |    4380000 |    2 |
+| Micronesia, Federated States of              |     119000 |    2 |
+| Mayotte                                      |     149000 |    2 |
+| Mauritius                                    |    1158000 |    2 |
+| Mauritania                                   |    2670000 |    2 |
+| Martinique                                   |     395000 |    2 |
+| Marshall Islands                             |      64000 |    2 |
+| Namibia                                      |    1726000 |    2 |
+| Nauru                                        |      12000 |    2 |
+| Paraguay                                     |    5496000 |    2 |
+| Papua New Guinea                             |    4807000 |    2 |
+| Panama                                       |    2856000 |    2 |
+| Palau                                        |      19000 |    2 |
+| Oman                                         |    2542000 |    2 |
+| Côte d?Ivoire                                |   14786000 |    2 |
+| Norway                                       |    4478500 |    2 |
+| Norfolk Island                               |       2000 |    2 |
+| Niue                                         |       2000 |    2 |
+| Niger                                        |   10730000 |    2 |
+| Nicaragua                                    |    5074000 |    2 |
+| Nepal                                        |   23930000 |    2 |
+| Morocco                                      |   28351000 |    2 |
+| Saint Pierre and Miquelon                    |       7000 |    2 |
+| United States Minor Outlying Islands         |          0 |    2 |
+| Belarus                                      |   10236000 |    2 |
+| Uzbekistan                                   |   24318000 |    2 |
+| New Zealand                                  |    3862000 |    2 |
+| New Caledonia                                |     214000 |    2 |
+| Uruguay                                      |    3337000 |    2 |
+| Hungary                                      |   10043200 |    2 |
+| Uganda                                       |   21778000 |    2 |
+| Tuvalu                                       |      12000 |    2 |
+| Turks and Caicos Islands                     |      17000 |    2 |
+| Turkmenistan                                 |    4459000 |    2 |
+| San Marino                                   |      27000 |    2 |
+| Tunisia                                      |    9586000 |    2 |
+| Wallis and Futuna                            |      15000 |    2 |
+| Vanuatu                                      |     190000 |    2 |
+| French Southern territories                  |          0 |    2 |
+| Heard Island and McDonald Islands            |          0 |    2 |
+| South Georgia and the South Sandwich Islands |          0 |    2 |
+| British Indian Ocean Territory               |          0 |    2 |
+| Bouvet Island                                |          0 |    2 |
+| Antarctica                                   |          0 |    2 |
+| Palestine                                    |    3101000 |    2 |
+| Zimbabwe                                     |   11669000 |    2 |
+| Virgin Islands, U.S.                         |      93000 |    2 |
+| Estonia                                      |    1439200 |    2 |
+| Venezuela                                    |   24170000 |    2 |
+| Holy See (Vatican City State)                |       1000 |    2 |
+| Czech Republic                               |   10278100 |    2 |
+| Chad                                         |    7651000 |    2 |
+| Sri Lanka                                    |   18827000 |    2 |
+| Somalia                                      |   10097000 |    2 |
+| Slovenia                                     |    1987800 |    2 |
+| Slovakia                                     |    5398700 |    2 |
+| Singapore                                    |    3567000 |    2 |
+| Sierra Leone                                 |    4854000 |    2 |
+| Seychelles                                   |      77000 |    2 |
+| Senegal                                      |    9481000 |    2 |
+| Saudi Arabia                                 |   21607000 |    2 |
+| Sao Tome and Principe                        |     147000 |    2 |
+| Samoa                                        |     180000 |    2 |
+| Zambia                                       |    9169000 |    2 |
+| Sudan                                        |   29490000 |    2 |
+| Finland                                      |    5171300 |    2 |
+| Trinidad and Tobago                          |    1295000 |    2 |
+| Tonga                                        |      99000 |    2 |
+| Tokelau                                      |       2000 |    2 |
+| Togo                                         |    4629000 |    2 |
+| Denmark                                      |    5330000 |    2 |
+| Tanzania                                     |   33517000 |    2 |
+| Taiwan                                       |   22256000 |    2 |
+| Tajikistan                                   |    6188000 |    2 |
+| Syria                                        |   16125000 |    2 |
+| Switzerland                                  |    7160400 |    2 |
+| Swaziland                                    |    1008000 |    2 |
+| Suriname                                     |     417000 |    2 |
+| Solomon Islands                              |     444000 |    2 |
+| Guam                                         |     168000 |    2 |
+| El Salvador                                  |    6276000 |    2 |
+| Ecuador                                      |   12646000 |    2 |
+| Dominican Republic                           |    8495000 |    2 |
+| Dominica                                     |      71000 |    2 |
+| Djibouti                                     |     638000 |    2 |
+| Costa Rica                                   |    4023000 |    2 |
+| Cook Islands                                 |      20000 |    2 |
+| Chile                                        |   15211000 |    2 |
+| Cayman Islands                               |      38000 |    2 |
+| Burundi                                      |    6695000 |    2 |
+| Burkina Faso                                 |   11937000 |    2 |
+| Bulgaria                                     |    8190900 |    2 |
+| Eritrea                                      |    3850000 |    2 |
+| Spain                                        |   39441700 |    2 |
+| Guadeloupe                                   |     456000 |    2 |
+| Greenland                                    |      56000 |    2 |
+| Grenada                                      |      94000 |    2 |
+| Gibraltar                                    |      25000 |    2 |
+| Ghana                                        |   20212000 |    2 |
+| Georgia                                      |    4968000 |    2 |
+| Gambia                                       |    1305000 |    2 |
+| Gabon                                        |    1226000 |    2 |
+| Faroe Islands                                |      43000 |    2 |
+| Fiji Islands                                 |     817000 |    2 |
+| Falkland Islands                             |       2000 |    2 |
+| South Africa                                 |   40377000 |    2 |
+| Brunei                                       |     328000 |    2 |
+| Virgin Islands, British                      |      21000 |    2 |
+| Aruba                                        |     103000 |    2 |
+| Armenia                                      |    3520000 |    2 |
+| Argentina                                    |   37032000 |    2 |
+| United Arab Emirates                         |    2441000 |    2 |
+| Antigua and Barbuda                          |      68000 |    2 |
+| Anguilla                                     |       8000 |    2 |
+| Angola                                       |   12878000 |    2 |
+| Andorra                                      |      78000 |    2 |
+| American Samoa                               |      68000 |    2 |
+| Algeria                                      |   31471000 |    2 |
+| Albania                                      |    3401200 |    2 |
+| Netherlands Antilles                         |     217000 |    2 |
+| Australia                                    |   18886000 |    2 |
+| Azerbaijan                                   |    7734000 |    2 |
+| Afghanistan                                  |   22720000 |    2 |
+| Botswana                                     |    1622000 |    2 |
+| Bosnia and Herzegovina                       |    3972000 |    2 |
+| Bolivia                                      |    8329000 |    2 |
+| Bhutan                                       |    2124000 |    2 |
+| Bermuda                                      |      65000 |    2 |
+| Benin                                        |    6097000 |    2 |
+| Belize                                       |     241000 |    2 |
+| Belgium                                      |   10239000 |    2 |
+| Barbados                                     |     270000 |    2 |
+| Bahrain                                      |     617000 |    2 |
+| Bahamas                                      |     307000 |    2 |
+| Netherlands                                  |   15864000 |    2 |
+| Guatemala                                    |   11385000 |    2 |
+| Malta                                        |     380200 |    2 |
+| Lesotho                                      |    2153000 |    2 |
+| Latvia                                       |    2424200 |    2 |
+| Laos                                         |    5433000 |    2 |
+| Cyprus                                       |     754700 |    2 |
+| Kuwait                                       |    1972000 |    2 |
+| Cuba                                         |   11201000 |    2 |
+| Croatia                                      |    4473000 |    2 |
+| Greece                                       |   10545700 |    2 |
+| South Korea                                  |   46844000 |    2 |
+| North Korea                                  |   24039000 |    2 |
+| Cocos (Keeling) Islands                      |        600 |    2 |
+| Congo                                        |    2943000 |    2 |
+| Lebanon                                      |    3282000 |    2 |
+| Liberia                                      |    3154000 |    2 |
+| Mali                                         |   11234000 |    2 |
+| Malaysia                                     |   22244000 |    2 |
+| Maldives                                     |     286000 |    2 |
+| Malawi                                       |   10925000 |    2 |
+| Macedonia                                    |    2024000 |    2 |
+| Madagascar                                   |   15942000 |    2 |
+| Macao                                        |     473000 |    2 |
+| Western Sahara                               |     293000 |    2 |
+| Luxembourg                                   |     435700 |    2 |
+| Lithuania                                    |    3698500 |    2 |
+| Liechtenstein                                |      32300 |    2 |
+| Libyan Arab Jamahiriya                       |    5605000 |    2 |
+| Comoros                                      |     578000 |    2 |
+| Colombia                                     |   42321000 |    2 |
+| Austria                                      |    8091800 |    2 |
+| East Timor                                   |     885000 |    2 |
+| Israel                                       |    6217000 |    2 |
+| Iceland                                      |     279000 |    2 |
+| Ireland                                      |    3775100 |    2 |
+| Iraq                                         |   23115000 |    2 |
+| Svalbard and Jan Mayen                       |       3200 |    2 |
+| Hong Kong                                    |    6782000 |    2 |
+| Honduras                                     |    6485000 |    2 |
+| Haiti                                        |    8222000 |    2 |
+| Guyana                                       |     861000 |    2 |
+| Guinea-Bissau                                |    1213000 |    2 |
+| Jamaica                                      |    2583000 |    2 |
+| Yemen                                        |   18112000 |    2 |
+| Kiribati                                     |      83000 |    2 |
+| Kyrgyzstan                                   |    4699000 |    2 |
+| Central African Republic                     |    3615000 |    2 |
+| Kenya                                        |   30080000 |    2 |
+| Kazakstan                                    |   16223000 |    2 |
+| Cape Verde                                   |     428000 |    2 |
+| Canada                                       |   31147000 |    2 |
+| Cameroon                                     |   15085000 |    2 |
+| Cambodia                                     |   11168000 |    2 |
+| Yugoslavia                                   |   10640000 |    2 |
+| Christmas Island                             |       2500 |    2 |
+| Jordan                                       |    5083000 |    2 |
+| Guinea                                       |    7430000 |    2 |
++----------------------------------------------+------------+------+
+239 rows in set (0.00 sec)
+
+mysql> select waga, count(*) ile from wagi group by 1;
++------+-----+
+| waga | ile |
++------+-----+
+|    2 | 215 |
+|    4 |  14 |
+|    6 |  10 |
++------+-----+
+3 rows in set (0.00 sec)
+
+-- tworzenie widoku na bazie widoku
+mysql> create view wdw as
+    -> select * from wagi
+    -> where kraj like "p%";
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from wdw;
++------------------+-----------+------+
+| kraj             | ludność   | waga |
++------------------+-----------+------+
+| Philippines      |  75967000 |    4 |
+| Pakistan         | 156483000 |    6 |
+| Palau            |     19000 |    2 |
+| Panama           |   2856000 |    2 |
+| Papua New Guinea |   4807000 |    2 |
+| Paraguay         |   5496000 |    2 |
+| Peru             |  25662000 |    2 |
+| Pitcairn         |        50 |    2 |
+| Portugal         |   9997600 |    2 |
+| Puerto Rico      |   3869000 |    2 |
+| Poland           |  38653600 |    2 |
+| Palestine        |   3101000 |    2 |
++------------------+-----------+------+
+12 rows in set (0.02 sec)
+
+-- update tych widoków i inne operacje
+-- niemodyfikowalne:
+mysql> update widok set waga = 11 where kraj = "poland";
+ERROR 1348 (HY000): Column 'waga' is not updatable
+
+mysql> create view miasta(id, kod, nazwa, ludność) as
+    -> select id, countrycode, name, population
+    -> from city;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert miasta
+    -> value
+    -> (null, "pol", "niujork", 20);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> delete from miasta where id = "4080";
+Query OK, 1 row affected (0.00 sec)
+
+-- usunięcie jednego widoku - widok dyndający
+mysql> drop view widok;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from wdw;
+ERROR 1356 (HY000): View 'swiat.wdw' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them

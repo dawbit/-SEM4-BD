@@ -1,0 +1,823 @@
+mysql> use swiat
+
+wypisz kody pañstw, ich nazwy(zaczynaj¹ce siê na P lub H), ich jêzyki i infromacjê o tym, czy jêzyk ten jest urzêdowy (urzêdowy) czy nie (nieoficjalny)
+
+mysql> select code kod, name kraj, language jêzyk,
+    -> if(isofficial = "t", "urzêdowy", "nieoficjalny") jaki
+    -> from country, countrylanguage
+    -> where
+    -> code = countrycode
+    -> and
+    -> (name like "p%" or name like "h%")
+    -> order by 2, 4, 3 desc;
++-----+-------------------------------+----------------------+--------------+
+| kod | kraj                          | jêzyk                | jaki         |
++-----+-------------------------------+----------------------+--------------+
+| HTI | Haiti                         | Haiti Creole         | nieoficjalny |
+| HTI | Haiti                         | French               | urzêdowy     |
+| VAT | Holy See (Vatican City State) | Italian              | urzêdowy     |
+| HND | Honduras                      | Miskito              | nieoficjalny |
+| HND | Honduras                      | Garifuna             | nieoficjalny |
+| HND | Honduras                      | Creole English       | nieoficjalny |
+| HND | Honduras                      | Spanish              | urzêdowy     |
+| HKG | Hong Kong                     | Hakka                | nieoficjalny |
+| HKG | Hong Kong                     | Fukien               | nieoficjalny |
+| HKG | Hong Kong                     | Chiu chau            | nieoficjalny |
+| HKG | Hong Kong                     | Canton Chinese       | nieoficjalny |
+| HKG | Hong Kong                     | English              | urzêdowy     |
+| HUN | Hungary                       | Slovak               | nieoficjalny |
+| HUN | Hungary                       | Serbo-Croatian       | nieoficjalny |
+| HUN | Hungary                       | Romanian             | nieoficjalny |
+| HUN | Hungary                       | Romani               | nieoficjalny |
+| HUN | Hungary                       | German               | nieoficjalny |
+| HUN | Hungary                       | Hungarian            | urzêdowy     |
+| PAK | Pakistan                      | Sindhi               | nieoficjalny |
+| PAK | Pakistan                      | Saraiki              | nieoficjalny |
+| PAK | Pakistan                      | Punjabi              | nieoficjalny |
+| PAK | Pakistan                      | Pashto               | nieoficjalny |
+| PAK | Pakistan                      | Hindko               | nieoficjalny |
+| PAK | Pakistan                      | Brahui               | nieoficjalny |
+| PAK | Pakistan                      | Balochi              | nieoficjalny |
+| PAK | Pakistan                      | Urdu                 | urzêdowy     |
+| PLW | Palau                         | Philippene Languages | nieoficjalny |
+| PLW | Palau                         | Chinese              | nieoficjalny |
+| PLW | Palau                         | Palau                | urzêdowy     |
+| PLW | Palau                         | English              | urzêdowy     |
+| PSE | Palestine                     | Hebrew               | nieoficjalny |
+| PSE | Palestine                     | Arabic               | nieoficjalny |
+| PAN | Panama                        | Guaymí               | nieoficjalny |
+| PAN | Panama                        | Embera               | nieoficjalny |
+| PAN | Panama                        | Cuna                 | nieoficjalny |
+| PAN | Panama                        | Creole English       | nieoficjalny |
+| PAN | Panama                        | Arabic               | nieoficjalny |
+| PAN | Panama                        | Spanish              | urzêdowy     |
+| PNG | Papua New Guinea              | Papuan Languages     | nieoficjalny |
+| PNG | Papua New Guinea              | Malenasian Languages | nieoficjalny |
+| PRY | Paraguay                      | Portuguese           | nieoficjalny |
+| PRY | Paraguay                      | German               | nieoficjalny |
+| PRY | Paraguay                      | Spanish              | urzêdowy     |
+| PRY | Paraguay                      | Guaraní              | urzêdowy     |
+| PER | Peru                          | Spanish              | urzêdowy     |
+| PER | Peru                          | Ketšua               | urzêdowy     |
+| PER | Peru                          | Aimará               | urzêdowy     |
+| PHL | Philippines                   | Waray-waray          | nieoficjalny |
+| PHL | Philippines                   | Pangasinan           | nieoficjalny |
+| PHL | Philippines                   | Pampango             | nieoficjalny |
+| PHL | Philippines                   | Maranao              | nieoficjalny |
+| PHL | Philippines                   | Maguindanao          | nieoficjalny |
+| PHL | Philippines                   | Ilocano              | nieoficjalny |
+| PHL | Philippines                   | Hiligaynon           | nieoficjalny |
+| PHL | Philippines                   | Cebuano              | nieoficjalny |
+| PHL | Philippines                   | Bicol                | nieoficjalny |
+| PHL | Philippines                   | Pilipino             | urzêdowy     |
+| PCN | Pitcairn                      | Pitcairnese          | nieoficjalny |
+| POL | Poland                        | Ukrainian            | nieoficjalny |
+| POL | Poland                        | German               | nieoficjalny |
+| POL | Poland                        | Belorussian          | nieoficjalny |
+| POL | Poland                        | Polish               | urzêdowy     |
+| PRT | Portugal                      | Portuguese           | urzêdowy     |
+| PRI | Puerto Rico                   | English              | nieoficjalny |
+| PRI | Puerto Rico                   | Spanish              | urzêdowy     |
++-----+-------------------------------+----------------------+--------------+
+65 rows in set (0.00 sec)
+
+Musz¹ byæ nawiasy, ¿eby siê spójniki logiczne zgadza³y. Bez nawiasów by³yby pañstwa ze zgodnym kodem i na p, lub wszystkie na h.
+
+
+mysql> select code kod, name kraj, language jêzyk,
+    -> if(isofficial = "t", "urzêdowy", "nieoficjalny") jaki
+    -> from country JOIN countrylanguage
+    -> ON
+    -> code = countrycode
+    -> where
+    -> name like "p%" or name like "h%"
+    -> order by 2, 4, 3 desc;
++-----+-------------------------------+----------------------+--------------+
+| kod | kraj                          | jêzyk                | jaki         |
++-----+-------------------------------+----------------------+--------------+
+| HTI | Haiti                         | Haiti Creole         | nieoficjalny |
+| HTI | Haiti                         | French               | urzêdowy     |
+| VAT | Holy See (Vatican City State) | Italian              | urzêdowy     |
+| HND | Honduras                      | Miskito              | nieoficjalny |
+| HND | Honduras                      | Garifuna             | nieoficjalny |
+| HND | Honduras                      | Creole English       | nieoficjalny |
+| HND | Honduras                      | Spanish              | urzêdowy     |
+| HKG | Hong Kong                     | Hakka                | nieoficjalny |
+| HKG | Hong Kong                     | Fukien               | nieoficjalny |
+| HKG | Hong Kong                     | Chiu chau            | nieoficjalny |
+| HKG | Hong Kong                     | Canton Chinese       | nieoficjalny |
+| HKG | Hong Kong                     | English              | urzêdowy     |
+| HUN | Hungary                       | Slovak               | nieoficjalny |
+| HUN | Hungary                       | Serbo-Croatian       | nieoficjalny |
+| HUN | Hungary                       | Romanian             | nieoficjalny |
+| HUN | Hungary                       | Romani               | nieoficjalny |
+| HUN | Hungary                       | German               | nieoficjalny |
+| HUN | Hungary                       | Hungarian            | urzêdowy     |
+| PAK | Pakistan                      | Sindhi               | nieoficjalny |
+| PAK | Pakistan                      | Saraiki              | nieoficjalny |
+| PAK | Pakistan                      | Punjabi              | nieoficjalny |
+| PAK | Pakistan                      | Pashto               | nieoficjalny |
+| PAK | Pakistan                      | Hindko               | nieoficjalny |
+| PAK | Pakistan                      | Brahui               | nieoficjalny |
+| PAK | Pakistan                      | Balochi              | nieoficjalny |
+| PAK | Pakistan                      | Urdu                 | urzêdowy     |
+| PLW | Palau                         | Philippene Languages | nieoficjalny |
+| PLW | Palau                         | Chinese              | nieoficjalny |
+| PLW | Palau                         | Palau                | urzêdowy     |
+| PLW | Palau                         | English              | urzêdowy     |
+| PSE | Palestine                     | Hebrew               | nieoficjalny |
+| PSE | Palestine                     | Arabic               | nieoficjalny |
+| PAN | Panama                        | Guaymí               | nieoficjalny |
+| PAN | Panama                        | Embera               | nieoficjalny |
+| PAN | Panama                        | Cuna                 | nieoficjalny |
+| PAN | Panama                        | Creole English       | nieoficjalny |
+| PAN | Panama                        | Arabic               | nieoficjalny |
+| PAN | Panama                        | Spanish              | urzêdowy     |
+| PNG | Papua New Guinea              | Papuan Languages     | nieoficjalny |
+| PNG | Papua New Guinea              | Malenasian Languages | nieoficjalny |
+| PRY | Paraguay                      | Portuguese           | nieoficjalny |
+| PRY | Paraguay                      | German               | nieoficjalny |
+| PRY | Paraguay                      | Spanish              | urzêdowy     |
+| PRY | Paraguay                      | Guaraní              | urzêdowy     |
+| PER | Peru                          | Spanish              | urzêdowy     |
+| PER | Peru                          | Ketšua               | urzêdowy     |
+| PER | Peru                          | Aimará               | urzêdowy     |
+| PHL | Philippines                   | Waray-waray          | nieoficjalny |
+| PHL | Philippines                   | Pangasinan           | nieoficjalny |
+| PHL | Philippines                   | Pampango             | nieoficjalny |
+| PHL | Philippines                   | Maranao              | nieoficjalny |
+| PHL | Philippines                   | Maguindanao          | nieoficjalny |
+| PHL | Philippines                   | Ilocano              | nieoficjalny |
+| PHL | Philippines                   | Hiligaynon           | nieoficjalny |
+| PHL | Philippines                   | Cebuano              | nieoficjalny |
+| PHL | Philippines                   | Bicol                | nieoficjalny |
+| PHL | Philippines                   | Pilipino             | urzêdowy     |
+| PCN | Pitcairn                      | Pitcairnese          | nieoficjalny |
+| POL | Poland                        | Ukrainian            | nieoficjalny |
+| POL | Poland                        | German               | nieoficjalny |
+| POL | Poland                        | Belorussian          | nieoficjalny |
+| POL | Poland                        | Polish               | urzêdowy     |
+| PRT | Portugal                      | Portuguese           | urzêdowy     |
+| PRI | Puerto Rico                   | English              | nieoficjalny |
+| PRI | Puerto Rico                   | Spanish              | urzêdowy     |
++-----+-------------------------------+----------------------+--------------+
+65 rows in set (0.00 sec)
+
+To samo ze s³ówkiem JOIN
+
+
+mysql> select code kod, name kraj, language jêzyk,
+    -> if(isofficial = "t", "urzêdowy", "nieoficjalny") jaki
+    -> from country JOIN countrylanguage
+    -> where
+    -> code = countrycode
+    -> and
+    -> (name like "p%" or name like "h%")
+    -> order by 2, 4, 3 desc;
++-----+-------------------------------+----------------------+--------------+
+| kod | kraj                          | jêzyk                | jaki         |
++-----+-------------------------------+----------------------+--------------+
+| HTI | Haiti                         | Haiti Creole         | nieoficjalny |
+| HTI | Haiti                         | French               | urzêdowy     |
+| VAT | Holy See (Vatican City State) | Italian              | urzêdowy     |
+| HND | Honduras                      | Miskito              | nieoficjalny |
+| HND | Honduras                      | Garifuna             | nieoficjalny |
+| HND | Honduras                      | Creole English       | nieoficjalny |
+| HND | Honduras                      | Spanish              | urzêdowy     |
+| HKG | Hong Kong                     | Hakka                | nieoficjalny |
+| HKG | Hong Kong                     | Fukien               | nieoficjalny |
+| HKG | Hong Kong                     | Chiu chau            | nieoficjalny |
+| HKG | Hong Kong                     | Canton Chinese       | nieoficjalny |
+| HKG | Hong Kong                     | English              | urzêdowy     |
+| HUN | Hungary                       | Slovak               | nieoficjalny |
+| HUN | Hungary                       | Serbo-Croatian       | nieoficjalny |
+| HUN | Hungary                       | Romanian             | nieoficjalny |
+| HUN | Hungary                       | Romani               | nieoficjalny |
+| HUN | Hungary                       | German               | nieoficjalny |
+| HUN | Hungary                       | Hungarian            | urzêdowy     |
+| PAK | Pakistan                      | Sindhi               | nieoficjalny |
+| PAK | Pakistan                      | Saraiki              | nieoficjalny |
+| PAK | Pakistan                      | Punjabi              | nieoficjalny |
+| PAK | Pakistan                      | Pashto               | nieoficjalny |
+| PAK | Pakistan                      | Hindko               | nieoficjalny |
+| PAK | Pakistan                      | Brahui               | nieoficjalny |
+| PAK | Pakistan                      | Balochi              | nieoficjalny |
+| PAK | Pakistan                      | Urdu                 | urzêdowy     |
+| PLW | Palau                         | Philippene Languages | nieoficjalny |
+| PLW | Palau                         | Chinese              | nieoficjalny |
+| PLW | Palau                         | Palau                | urzêdowy     |
+| PLW | Palau                         | English              | urzêdowy     |
+| PSE | Palestine                     | Hebrew               | nieoficjalny |
+| PSE | Palestine                     | Arabic               | nieoficjalny |
+| PAN | Panama                        | Guaymí               | nieoficjalny |
+| PAN | Panama                        | Embera               | nieoficjalny |
+| PAN | Panama                        | Cuna                 | nieoficjalny |
+| PAN | Panama                        | Creole English       | nieoficjalny |
+| PAN | Panama                        | Arabic               | nieoficjalny |
+| PAN | Panama                        | Spanish              | urzêdowy     |
+| PNG | Papua New Guinea              | Papuan Languages     | nieoficjalny |
+| PNG | Papua New Guinea              | Malenasian Languages | nieoficjalny |
+| PRY | Paraguay                      | Portuguese           | nieoficjalny |
+| PRY | Paraguay                      | German               | nieoficjalny |
+| PRY | Paraguay                      | Spanish              | urzêdowy     |
+| PRY | Paraguay                      | Guaraní              | urzêdowy     |
+| PER | Peru                          | Spanish              | urzêdowy     |
+| PER | Peru                          | Ketšua               | urzêdowy     |
+| PER | Peru                          | Aimará               | urzêdowy     |
+| PHL | Philippines                   | Waray-waray          | nieoficjalny |
+| PHL | Philippines                   | Pangasinan           | nieoficjalny |
+| PHL | Philippines                   | Pampango             | nieoficjalny |
+| PHL | Philippines                   | Maranao              | nieoficjalny |
+| PHL | Philippines                   | Maguindanao          | nieoficjalny |
+| PHL | Philippines                   | Ilocano              | nieoficjalny |
+| PHL | Philippines                   | Hiligaynon           | nieoficjalny |
+| PHL | Philippines                   | Cebuano              | nieoficjalny |
+| PHL | Philippines                   | Bicol                | nieoficjalny |
+| PHL | Philippines                   | Pilipino             | urzêdowy     |
+| PCN | Pitcairn                      | Pitcairnese          | nieoficjalny |
+| POL | Poland                        | Ukrainian            | nieoficjalny |
+| POL | Poland                        | German               | nieoficjalny |
+| POL | Poland                        | Belorussian          | nieoficjalny |
+| POL | Poland                        | Polish               | urzêdowy     |
+| PRT | Portugal                      | Portuguese           | urzêdowy     |
+| PRI | Puerto Rico                   | English              | nieoficjalny |
+| PRI | Puerto Rico                   | Spanish              | urzêdowy     |
++-----+-------------------------------+----------------------+--------------+
+65 rows in set (0.00 sec)
+
+ADN zamiast ON
+Join pozwala na wyœwietlanie kolumny obok kolumny, a to co zajêcia temu, to kolumna pod kolumn¹.
+
+mysql> select code kod, name kraj, language jêzyk,
+    -> if(isofficial = "t", "urzêdowy", "nieoficjalny") jaki
+    -> from country, countrylanguage
+    -> ON
+    -> code = countrycode
+    -> where
+    -> name like "p%" or name like "h%"
+    -> order by 2, 4, 3 desc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ON
+code = countrycode
+where
+name like "p%" or name like "h%"
+order by 2, 4, 3 de' at line 4
+
+ON nie dzia³a bez JOIN, albo czegoœ jeszcze
+
+
+mysql> select code kod, name kraj, language jêzyk,
+    -> if(isofficial = "t", "urzêdowy", "nieoficjalny") jaki
+    -> from country JOIN countrylanguage
+    -> ON
+    -> code = countrycode
+    -> and
+    -> (name like "p%" or name like "h%")
+    -> order by 2, 4, 3 desc;
++-----+-------------------------------+----------------------+--------------+
+| kod | kraj                          | jêzyk                | jaki         |
++-----+-------------------------------+----------------------+--------------+
+| HTI | Haiti                         | Haiti Creole         | nieoficjalny |
+| HTI | Haiti                         | French               | urzêdowy     |
+| VAT | Holy See (Vatican City State) | Italian              | urzêdowy     |
+| HND | Honduras                      | Miskito              | nieoficjalny |
+| HND | Honduras                      | Garifuna             | nieoficjalny |
+| HND | Honduras                      | Creole English       | nieoficjalny |
+| HND | Honduras                      | Spanish              | urzêdowy     |
+| HKG | Hong Kong                     | Hakka                | nieoficjalny |
+| HKG | Hong Kong                     | Fukien               | nieoficjalny |
+| HKG | Hong Kong                     | Chiu chau            | nieoficjalny |
+| HKG | Hong Kong                     | Canton Chinese       | nieoficjalny |
+| HKG | Hong Kong                     | English              | urzêdowy     |
+| HUN | Hungary                       | Slovak               | nieoficjalny |
+| HUN | Hungary                       | Serbo-Croatian       | nieoficjalny |
+| HUN | Hungary                       | Romanian             | nieoficjalny |
+| HUN | Hungary                       | Romani               | nieoficjalny |
+| HUN | Hungary                       | German               | nieoficjalny |
+| HUN | Hungary                       | Hungarian            | urzêdowy     |
+| PAK | Pakistan                      | Sindhi               | nieoficjalny |
+| PAK | Pakistan                      | Saraiki              | nieoficjalny |
+| PAK | Pakistan                      | Punjabi              | nieoficjalny |
+| PAK | Pakistan                      | Pashto               | nieoficjalny |
+| PAK | Pakistan                      | Hindko               | nieoficjalny |
+| PAK | Pakistan                      | Brahui               | nieoficjalny |
+| PAK | Pakistan                      | Balochi              | nieoficjalny |
+| PAK | Pakistan                      | Urdu                 | urzêdowy     |
+| PLW | Palau                         | Philippene Languages | nieoficjalny |
+| PLW | Palau                         | Chinese              | nieoficjalny |
+| PLW | Palau                         | Palau                | urzêdowy     |
+| PLW | Palau                         | English              | urzêdowy     |
+| PSE | Palestine                     | Hebrew               | nieoficjalny |
+| PSE | Palestine                     | Arabic               | nieoficjalny |
+| PAN | Panama                        | Guaymí               | nieoficjalny |
+| PAN | Panama                        | Embera               | nieoficjalny |
+| PAN | Panama                        | Cuna                 | nieoficjalny |
+| PAN | Panama                        | Creole English       | nieoficjalny |
+| PAN | Panama                        | Arabic               | nieoficjalny |
+| PAN | Panama                        | Spanish              | urzêdowy     |
+| PNG | Papua New Guinea              | Papuan Languages     | nieoficjalny |
+| PNG | Papua New Guinea              | Malenasian Languages | nieoficjalny |
+| PRY | Paraguay                      | Portuguese           | nieoficjalny |
+| PRY | Paraguay                      | German               | nieoficjalny |
+| PRY | Paraguay                      | Spanish              | urzêdowy     |
+| PRY | Paraguay                      | Guaraní              | urzêdowy     |
+| PER | Peru                          | Spanish              | urzêdowy     |
+| PER | Peru                          | Ketšua               | urzêdowy     |
+| PER | Peru                          | Aimará               | urzêdowy     |
+| PHL | Philippines                   | Waray-waray          | nieoficjalny |
+| PHL | Philippines                   | Pangasinan           | nieoficjalny |
+| PHL | Philippines                   | Pampango             | nieoficjalny |
+| PHL | Philippines                   | Maranao              | nieoficjalny |
+| PHL | Philippines                   | Maguindanao          | nieoficjalny |
+| PHL | Philippines                   | Ilocano              | nieoficjalny |
+| PHL | Philippines                   | Hiligaynon           | nieoficjalny |
+| PHL | Philippines                   | Cebuano              | nieoficjalny |
+| PHL | Philippines                   | Bicol                | nieoficjalny |
+| PHL | Philippines                   | Pilipino             | urzêdowy     |
+| PCN | Pitcairn                      | Pitcairnese          | nieoficjalny |
+| POL | Poland                        | Ukrainian            | nieoficjalny |
+| POL | Poland                        | German               | nieoficjalny |
+| POL | Poland                        | Belorussian          | nieoficjalny |
+| POL | Poland                        | Polish               | urzêdowy     |
+| PRT | Portugal                      | Portuguese           | urzêdowy     |
+| PRI | Puerto Rico                   | English              | nieoficjalny |
+| PRI | Puerto Rico                   | Spanish              | urzêdowy     |
++-----+-------------------------------+----------------------+--------------+
+65 rows in set (0.00 sec)
+
+Wszystko ON bez WHERE
+Z³¹czenie za pomoc¹ join, albo przecinka. Join ma wiêcej mo¿liwoœci.
+Jakbyœmy ³¹czyli pañstwa ze stolicami, to za pomoc¹ join albo przecinka, nie wyœwietli³oby pañstw bez stolicy.
+Za pomoc¹ left join albo right join, wyœwietli
+
+
+Wypisaæ nazwy pañstw na P lub H i ich stolice
+
+Jak jest przecinek, to z³¹czenie za pomoc¹ where
+
+mysql> select k.name kraj, m.name stolica
+    -> from country k, city m
+    -> where
+    -> capital = id
+    -> and
+    -> (k.name like "p%" or k.name like "h");
++------------------+------------------+
+| kraj             | stolica          |
++------------------+------------------+
+| Philippines      | Manila           |
+| Pakistan         | Islamabad        |
+| Palau            | Koror            |
+| Panama           | Ciudad de Panamá |
+| Papua New Guinea | Port Moresby     |
+| Paraguay         | Asunción         |
+| Peru             | Lima             |
+| Pitcairn         | Adamstown        |
+| Portugal         | Lisboa           |
+| Puerto Rico      | San Juan         |
+| Poland           | Warszawa         |
+| Palestine        | Gaza             |
++------------------+------------------+
+12 rows in set (0.00 sec)
+
+
+mysql> select k.name kraj, m.name stolica
+    -> from country k join city m
+    -> on
+    -> capital = id
+    -> where
+    -> k.name like "p%" or k.name like "h"
+    -> order by 1;
++------------------+------------------+
+| kraj             | stolica          |
++------------------+------------------+
+| Pakistan         | Islamabad        |
+| Palau            | Koror            |
+| Palestine        | Gaza             |
+| Panama           | Ciudad de Panamá |
+| Papua New Guinea | Port Moresby     |
+| Paraguay         | Asunción         |
+| Peru             | Lima             |
+| Philippines      | Manila           |
+| Pitcairn         | Adamstown        |
+| Poland           | Warszawa         |
+| Portugal         | Lisboa           |
+| Puerto Rico      | San Juan         |
++------------------+------------------+
+12 rows in set (0.00 sec)
+
+to samo z Joinem
+Jak jest Join albo where, to wyœwietlaj¹ siê tylko rekordy z parami, czyli pañstwa ze stolicami. Pañstwa bez stolic nie wpokazuj¹
+
+
+mysql> select k.name kraj, m.name stolica
+    -> from country k left join city m
+    -> on
+    -> capital = id
+    -> where
+    -> k.name like "p%" or k.name like "h%"
+    -> order by 1;
++-----------------------------------+--------------------+
+| kraj                              | stolica            |
++-----------------------------------+--------------------+
+| Haiti                             | Port-au-Prince     |
+| Heard Island and McDonald Islands | NULL               |
+| Holy See (Vatican City State)     | Citt? del Vaticano |
+| Honduras                          | Tegucigalpa        |
+| Hong Kong                         | Victoria           |
+| Hungary                           | Budapest           |
+| Pakistan                          | Islamabad          |
+| Palau                             | Koror              |
+| Palestine                         | Gaza               |
+| Panama                            | Ciudad de Panamá   |
+| Papua New Guinea                  | Port Moresby       |
+| Paraguay                          | Asunción           |
+| Peru                              | Lima               |
+| Philippines                       | Manila             |
+| Pitcairn                          | Adamstown          |
+| Poland                            | Warszawa           |
+| Portugal                          | Lisboa             |
+| Puerto Rico                       | San Juan           |
++-----------------------------------+--------------------+
+18 rows in set (0.00 sec)
+
+Wczeœniej zjeba³em, bo by³o k.name like "h" zamiast "h%", powinno byæ 17 rekordów zamiast 12, tu jest o 1 wiêcej.
+
+
+
+mysql> select k.name kraj, m.name stolica
+    -> from country k left join city m
+    -> where
+    -> capital = id
+    -> and
+    -> (k.name like "p%" or k.name like "h%")
+    -> order by 1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where
+capital = id
+and
+(k.name like "p%" or k.name like "h%")
+order by 1' at line 3
+
+
+Where zamiast ON nie dzia³a.
+Najbardziej uniwersalnym z³¹czeniem jest JOIN, bo mo¿e byæ on i where. Przecinek dzia³a tylko z where. Left i right join dzia³a tylko z ON, jeœli s¹ inne warunki, to mo¿na zadaæ je z where, albo z on.
+
+
+
+mysql> select k.name kraj, m.name stolica, language jêzyk
+    -> from country k, city m, countrylanguage j
+    -> where
+    -> capital = id
+    -> and
+    -> code = j.countrycode
+    -> and
+    -> isofficial = "t"
+    -> and
+    -> (k.name like "p%" or k.name like "h%")
+    -> order by 1, 3;
++-------------------------------+--------------------+------------+
+| kraj                          | stolica            | jêzyk      |
++-------------------------------+--------------------+------------+
+| Haiti                         | Port-au-Prince     | French     |
+| Holy See (Vatican City State) | Citt? del Vaticano | Italian    |
+| Honduras                      | Tegucigalpa        | Spanish    |
+| Hong Kong                     | Victoria           | English    |
+| Hungary                       | Budapest           | Hungarian  |
+| Pakistan                      | Islamabad          | Urdu       |
+| Palau                         | Koror              | English    |
+| Palau                         | Koror              | Palau      |
+| Panama                        | Ciudad de Panamá   | Spanish    |
+| Paraguay                      | Asunción           | Guaraní    |
+| Paraguay                      | Asunción           | Spanish    |
+| Peru                          | Lima               | Aimará     |
+| Peru                          | Lima               | Ketšua     |
+| Peru                          | Lima               | Spanish    |
+| Philippines                   | Manila             | Pilipino   |
+| Poland                        | Warszawa           | Polish     |
+| Portugal                      | Lisboa             | Portuguese |
+| Puerto Rico                   | San Juan           | Spanish    |
++-------------------------------+--------------------+------------+
+18 rows in set (0.00 sec)
+
+Dopisujemy jêzyk
+S¹ wypisane kraje, które maj¹ oficjalne jêzyki i s¹ takie, które maj¹ ich kilka i s¹ takie bez.
+
+
+mysql> select k.name kraj, m.name stolica, language jêzyk
+    -> from country k left join city m
+    -> on
+    -> capital = id
+    -> right join countrylanguage j
+    -> on
+    -> code = j.countrycode
+    -> where
+    -> isofficial = "t"
+    -> and
+    -> (k.name like "p%" or k.name like "h%")
+    -> order by 1, 3;
+
++-------------------------------+--------------------+------------+
+| kraj                          | stolica            | jêzyk      |
++-------------------------------+--------------------+------------+
+| Haiti                         | Port-au-Prince     | French     |
+| Holy See (Vatican City State) | Citt? del Vaticano | Italian    |
+| Honduras                      | Tegucigalpa        | Spanish    |
+| Hong Kong                     | Victoria           | English    |
+| Hungary                       | Budapest           | Hungarian  |
+| Pakistan                      | Islamabad          | Urdu       |
+| Palau                         | Koror              | English    |
+| Palau                         | Koror              | Palau      |
+| Panama                        | Ciudad de Panamá   | Spanish    |
+| Paraguay                      | Asunción           | Guaraní    |
+| Paraguay                      | Asunción           | Spanish    |
+| Peru                          | Lima               | Aimará     |
+| Peru                          | Lima               | Ketšua     |
+| Peru                          | Lima               | Spanish    |
+| Philippines                   | Manila             | Pilipino   |
+| Poland                        | Warszawa           | Polish     |
+| Portugal                      | Lisboa             | Portuguese |
+| Puerto Rico                   | San Juan           | Spanish    |
++-------------------------------+--------------------+------------+
+18 rows in set (0.01 sec)
+
+
+mysql> select k.name kraj, m.name stolica, language jêzyk
+    -> from country k left join city m
+    -> on
+    -> capital = id
+    -> left join countrylanguage j
+    -> on
+    -> code = j.countrycode
+    -> where
+    -> isofficial = "t"
+    -> and
+    -> (k.name like "p%" or k.name like "h%")
+    -> order by 1, 3;
++-------------------------------+--------------------+------------+
+| kraj                          | stolica            | jêzyk      |
++-------------------------------+--------------------+------------+
+| Haiti                         | Port-au-Prince     | French     |
+| Holy See (Vatican City State) | Citt? del Vaticano | Italian    |
+| Honduras                      | Tegucigalpa        | Spanish    |
+| Hong Kong                     | Victoria           | English    |
+| Hungary                       | Budapest           | Hungarian  |
+| Pakistan                      | Islamabad          | Urdu       |
+| Palau                         | Koror              | English    |
+| Palau                         | Koror              | Palau      |
+| Panama                        | Ciudad de Panamá   | Spanish    |
+| Paraguay                      | Asunción           | Guaraní    |
+| Paraguay                      | Asunción           | Spanish    |
+| Peru                          | Lima               | Aimará     |
+| Peru                          | Lima               | Ketšua     |
+| Peru                          | Lima               | Spanish    |
+| Philippines                   | Manila             | Pilipino   |
+| Poland                        | Warszawa           | Polish     |
+| Portugal                      | Lisboa             | Portuguese |
+| Puerto Rico                   | San Juan           | Spanish    |
++-------------------------------+--------------------+------------+
+18 rows in set (0.00 sec)
+
+Left i right join.
+
+
+mysql> select k.name kraj, m.name stolica, language jêzyk
+    -> from country k left join city m
+    -> on
+    -> capital = id
+    -> left join countrylanguage j
+    -> on
+    -> code = j.countrycode
+    -> where
+    -> (k.name like "p%" or k.name like "h%")
+    -> order by 1, 3;
++-----------------------------------+--------------------+----------------------+
+| kraj                              | stolica            | jêzyk                |
++-----------------------------------+--------------------+----------------------+
+| Haiti                             | Port-au-Prince     | French               |
+| Haiti                             | Port-au-Prince     | Haiti Creole         |
+| Heard Island and McDonald Islands | NULL               | NULL                 |
+| Holy See (Vatican City State)     | Citt? del Vaticano | Italian              |
+| Honduras                          | Tegucigalpa        | Creole English       |
+| Honduras                          | Tegucigalpa        | Garifuna             |
+| Honduras                          | Tegucigalpa        | Miskito              |
+| Honduras                          | Tegucigalpa        | Spanish              |
+| Hong Kong                         | Victoria           | Canton Chinese       |
+| Hong Kong                         | Victoria           | Chiu chau            |
+| Hong Kong                         | Victoria           | English              |
+| Hong Kong                         | Victoria           | Fukien               |
+| Hong Kong                         | Victoria           | Hakka                |
+| Hungary                           | Budapest           | German               |
+| Hungary                           | Budapest           | Hungarian            |
+| Hungary                           | Budapest           | Romani               |
+| Hungary                           | Budapest           | Romanian             |
+| Hungary                           | Budapest           | Serbo-Croatian       |
+| Hungary                           | Budapest           | Slovak               |
+| Pakistan                          | Islamabad          | Balochi              |
+| Pakistan                          | Islamabad          | Brahui               |
+| Pakistan                          | Islamabad          | Hindko               |
+| Pakistan                          | Islamabad          | Pashto               |
+| Pakistan                          | Islamabad          | Punjabi              |
+| Pakistan                          | Islamabad          | Saraiki              |
+| Pakistan                          | Islamabad          | Sindhi               |
+| Pakistan                          | Islamabad          | Urdu                 |
+| Palau                             | Koror              | Chinese              |
+| Palau                             | Koror              | English              |
+| Palau                             | Koror              | Palau                |
+| Palau                             | Koror              | Philippene Languages |
+| Palestine                         | Gaza               | Arabic               |
+| Palestine                         | Gaza               | Hebrew               |
+| Panama                            | Ciudad de Panamá   | Arabic               |
+| Panama                            | Ciudad de Panamá   | Creole English       |
+| Panama                            | Ciudad de Panamá   | Cuna                 |
+| Panama                            | Ciudad de Panamá   | Embera               |
+| Panama                            | Ciudad de Panamá   | Guaymí               |
+| Panama                            | Ciudad de Panamá   | Spanish              |
+| Papua New Guinea                  | Port Moresby       | Malenasian Languages |
+| Papua New Guinea                  | Port Moresby       | Papuan Languages     |
+| Paraguay                          | Asunción           | German               |
+| Paraguay                          | Asunción           | Guaraní              |
+| Paraguay                          | Asunción           | Portuguese           |
+| Paraguay                          | Asunción           | Spanish              |
+| Peru                              | Lima               | Aimará               |
+| Peru                              | Lima               | Ketšua               |
+| Peru                              | Lima               | Spanish              |
+| Philippines                       | Manila             | Bicol                |
+| Philippines                       | Manila             | Cebuano              |
+| Philippines                       | Manila             | Hiligaynon           |
+| Philippines                       | Manila             | Ilocano              |
+| Philippines                       | Manila             | Maguindanao          |
+| Philippines                       | Manila             | Maranao              |
+| Philippines                       | Manila             | Pampango             |
+| Philippines                       | Manila             | Pangasinan           |
+| Philippines                       | Manila             | Pilipino             |
+| Philippines                       | Manila             | Waray-waray          |
+| Pitcairn                          | Adamstown          | Pitcairnese          |
+| Poland                            | Warszawa           | Belorussian          |
+| Poland                            | Warszawa           | German               |
+| Poland                            | Warszawa           | Polish               |
+| Poland                            | Warszawa           | Ukrainian            |
+| Portugal                          | Lisboa             | Portuguese           |
+| Puerto Rico                       | San Juan           | English              |
+| Puerto Rico                       | San Juan           | Spanish              |
++-----------------------------------+--------------------+----------------------+
+66 rows in set (0.00 sec)
+
+Bez wymaganego jêzyka oficjalnego
+Left wskazuje na rekord, który nie ma kolegów. Jak robisz left join, to prawa mo¿e byæ pusta.
+
+
+
+
+wpisz nazwy miast Polski i ich województwa przy za³o¿eniu, ¿e nie znamy kodu Polski
+
+
+mysql> select m.name miasto, district wojewodztwo
+    -> from city m, country k
+    -> where
+    -> code = countrycode
+    -> and
+    -> k.name = "Poland"
+    -> order by 2, 1;
++---------------------+---------------------+
+| miasto              | wojewodztwo         |
++---------------------+---------------------+
+| Jelenia Góra        | Dolnoslaskie        |
+| Legnica             | Dolnoslaskie        |
+| Walbrzych           | Dolnoslaskie        |
+| Wroclaw             | Dolnoslaskie        |
+| Bydgoszcz           | Kujawsko-Pomorskie  |
+| Grudziadz           | Kujawsko-Pomorskie  |
+| Torun               | Kujawsko-Pomorskie  |
+| Wloclawek           | Kujawsko-Pomorskie  |
+| Lódz                | Lodzkie             |
+| Lublin              | Lubelskie           |
+| Gorzów Wielkopolski | Lubuskie            |
+| Zielona Góra        | Lubuskie            |
+| Kraków              | Malopolskie         |
+| Tarnów              | Malopolskie         |
+| Plock               | Mazowieckie         |
+| Radom               | Mazowieckie         |
+| Warszawa            | Mazowieckie         |
+| Opole               | Opolskie            |
+| Rzeszów             | Podkarpackie        |
+| Bialystok           | Podlaskie           |
+| Gdansk              | Pomorskie           |
+| Gdynia              | Pomorskie           |
+| Slupsk              | Pomorskie           |
+| Bielsko-Biala       | Slaskie             |
+| Bytom               | Slaskie             |
+| Chorzów             | Slaskie             |
+| Czestochowa         | Slaskie             |
+| Dabrowa Górnicza    | Slaskie             |
+| Gliwice             | Slaskie             |
+| Jastrzebie-Zdrój    | Slaskie             |
+| Jaworzno            | Slaskie             |
+| Katowice            | Slaskie             |
+| Ruda Slaska         | Slaskie             |
+| Rybnik              | Slaskie             |
+| Sosnowiec           | Slaskie             |
+| Tychy               | Slaskie             |
+| Zabrze              | Slaskie             |
+| Kielce              | Swietokrzyskie      |
+| Elblag              | Warminsko-Mazurskie |
+| Olsztyn             | Warminsko-Mazurskie |
+| Kalisz              | Wielkopolskie       |
+| Poznan              | Wielkopolskie       |
+| Koszalin            | Zachodnio-Pomorskie |
+| Szczecin            | Zachodnio-Pomorskie |
++---------------------+---------------------+
+
+
+
+Wypisz województwa i iloœæ ich miast
+nie znamy kodu Polski ale znamy nazwê lokaln¹
+
+
+
+mysql> select district województwo, count(*) ile
+    -> from city m, country k
+    -> where
+    -> code = countrycode
+    -> and
+    -> localname = "Polska"
+    -> group by 1
+    -> order by 2, 1;
++---------------------+-----+
+| województwo         | ile |
++---------------------+-----+
+| Lodzkie             |   1 |
+| Lubelskie           |   1 |
+| Opolskie            |   1 |
+| Podkarpackie        |   1 |
+| Podlaskie           |   1 |
+| Swietokrzyskie      |   1 |
+| Lubuskie            |   2 |
+| Malopolskie         |   2 |
+| Warminsko-Mazurskie |   2 |
+| Wielkopolskie       |   2 |
+| Zachodnio-Pomorskie |   2 |
+| Mazowieckie         |   3 |
+| Pomorskie           |   3 |
+| Dolnoslaskie        |   4 |
+| Kujawsko-Pomorskie  |   4 |
+| Slaskie             |  14 |
++---------------------+-----+
+16 rows in set (0.00 sec)
+
+
+wypisz nazwy pañstw na P lub na H, populacje tych pañstw, iloœæ miastowych w tych pañstwach i odsetek miastowych w tych pañstwach; maj¹ byæ wypisane tylko te kraje,
+w których odsetek ten jest wiêkszy od 0,3
+
+
+mysql> select k.name kraj, k.population "ilu w kraju",
+    -> sum(m.population) miastowi, sum(m.population)/k.population "%miastowych"
+    -> from country k, city m
+    -> where
+    -> code = countrycode
+    -> and
+    -> (k.name like "p%" or k.name like "h%")
+    -> group by 1
+    -> having
+    -> sum(m.population)/k.population > 0.3
+    -> order by 4, 1;
++-------------------------------+-------------+----------+-------------+
+| kraj                          | ilu w kraju | miastowi | %miastowych |
++-------------------------------+-------------+----------+-------------+
+| Poland                        |    38653600 | 11687431 |      0.3024 |
+| Puerto Rico                   |     3869000 |  1564174 |      0.4043 |
+| Philippines                   |    75967000 | 30934791 |      0.4072 |
+| Holy See (Vatican City State) |        1000 |      455 |      0.4550 |
+| Peru                          |    25662000 | 12147242 |      0.4734 |
+| Hong Kong                     |     6782000 |  3300633 |      0.4867 |
+| Palau                         |       19000 |    12000 |      0.6316 |
+| Pitcairn                      |          50 |       42 |      0.8400 |
++-------------------------------+-------------+----------+-------------+
+8 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

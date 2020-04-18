@@ -1,0 +1,663 @@
+mysql> use znajomi
+Database changed
+mysql> select miasto from osoby
+    -> union
+    -> select typ from telefony;
++-----------------+
+| miasto          |
++-----------------+
+| Gliwice         |
+| Tarnowskie Góry |
+| Knurów          |
+| komorkowy       |
+| stacjonarny     |
++-----------------+
+Union wyœwietla pojedyncze wartoœci, mimo to, ¿e pojawiaj¹ siê wiele razy
+
+
+mysql> select miasto from osoby
+    -> union all
+    -> select typ from telefony;
++-----------------+
+| miasto          |
++-----------------+
+| Gliwice         |
+| Tarnowskie Góry |
+| Gliwice         |
+| Knurów          |
+| Gliwice         |
+| komorkowy       |
+| komorkowy       |
+| komorkowy       |
+| stacjonarny     |
++-----------------+
+
+Dopisanie s³ówna all po union, powoduje wyœwietlanie tego samego rekordu tyle razy, ile wyst¹pi³
+
+mysql> select miasto from osoby
+    -> union all
+    -> select typ from telefony order by 1;
++-----------------+
+| miasto          |
++-----------------+
+| Gliwice         |
+| Gliwice         |
+| Gliwice         |
+| Knurów          |
+| komorkowy       |
+| komorkowy       |
+| komorkowy       |
+| stacjonarny     |
+| Tarnowskie Góry |
++-----------------+
+
+Sortowanie z Union
+
+
+mysql> select miasto from osoby
+    -> union all
+    -> select typ, numer from telefony;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+
+Nie mo¿na dawaæ ró¿nych iloœci kolumn
+
+mysql> select miasto, imie from osoby
+    -> union all
+    -> select typ, numer from telefony;
++-----------------+-----------+
+| miasto          | imie      |
++-----------------+-----------+
+| Gliwice         | Artur     |
+| Tarnowskie Góry | Micha³    |
+| Gliwice         | Monika    |
+| Knurów          | Oliwia    |
+| Gliwice         | Micha³    |
+| komorkowy       | 321123321 |
+| komorkowy       | 123456789 |
+| komorkowy       | 987789987 |
+| stacjonarny     | 567432121 |
++-----------------+-----------+
+
+Mo¿na ³¹czyæ z t¹ sam¹ iloœci¹ kolumn
+
+Przydatne, gdy mamy np. tabelkê osoby z cechami p³eæ i stan cywilny, ile jest osób o p³ci kobieta stanu wolnego.
+
+
+mysql> select count(miasto) ile
+    -> from osoby
+    -> where miasto = "gliwice";
++-----+
+| ile |
++-----+
+|   3 |
++-----+
+
+Liczenie iloœci wyst¹pieñ rekordów.
+
+
+mysql> select count("Policz ile jest znajomych z Gliwic.") ile
+    -> from osoby
+    -> where
+    -> miasto = "gliwice";
++-----+
+| ile |
++-----+
+|   3 |
++-----+
+
+W nawiasie mo¿e byæ byle co, bo i tak leci po warunku.
+
+mysql> select count(*) ile
+    -> from osoby
+    -> where
+    -> miasto = "gliwice";
++-----+
+| ile |
++-----+
+|   3 |
++-----+
+
+Wstawiamy *, jak nie chcemy nic pisaæ.
+
+
+
+@@@@ Tworzenie tabeli testowej @@@@
+mysql> create table test(
+    -> p char(1), s char(1));
+
+
+mysql> insert test value(
+    -> "k", "w"),
+    -> ("k", "z"),
+    -> ("k", "z"),
+    -> ("p", "w"),
+    -> ("p", "w"),
+    -> ("p", "w"),
+    -> ("p", "z"),
+    -> ("p", "z"),
+    -> ("p", "z"),
+    -> ("p", "z");
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+mysql> select p p³eæ, s stan, count(*) ile
+    -> from test
+    -> where
+    -> p = "k" and s = "w"
+    -> union
+    -> select p, s, count(*)
+    -> from test where
+    -> p = "k" and s = "z"
+    -> union
+    -> select p, s, count(*)
+    -> from test where
+    -> p = "p" and s = "w"
+    -> union
+    -> select p, s, count(*)
+    -> from test where
+    -> p = "p" and s = "z";
++------+------+-----+
+| p³eæ | stan | ile |
++------+------+-----+
+| k    | w    |   1 |
+| k    | z    |   2 |
+| p    | w    |   3 |
+| p    | z    |   4 |
++------+------+-----+
+
+£¹czenie tabeli matrymonialnej.
+
+
+mysql> use swiat;
+
+Zmiana gimbazy.
+
+mysql> select region
+    -> from country
+    -> where
+    -> continent = "Europe";
++------------------+
+| region           |
++------------------+
+| Western Europe   |
+| Southern Europe  |
+| Southern Europe  |
+| Western Europe   |
+| Southern Europe  |
+| British Islands  |
+| Eastern Europe   |
+| Southern Europe  |
+| Nordic Countries |
+| Southern Europe  |
+| Nordic Countries |
+| British Islands  |
+| Nordic Countries |
+| Southern Europe  |
+| Western Europe   |
+| Southern Europe  |
+| Southern Europe  |
+| Southern Europe  |
+| Baltic Countries |
+| Western Europe   |
+| Baltic Countries |
+| Western Europe   |
+| Southern Europe  |
+| Southern Europe  |
+| Eastern Europe   |
+| Western Europe   |
+| Nordic Countries |
+| Southern Europe  |
+| Eastern Europe   |
+| Western Europe   |
+| Eastern Europe   |
+| Nordic Countries |
+| Western Europe   |
+| Southern Europe  |
+| Eastern Europe   |
+| Southern Europe  |
+| Nordic Countries |
+| Western Europe   |
+| Nordic Countries |
+| Eastern Europe   |
+| Eastern Europe   |
+| Eastern Europe   |
+| Eastern Europe   |
+| Southern Europe  |
+| Eastern Europe   |
+| Baltic Countries |
++------------------+
+
+46 rekordów
+
+
+@@@@@@@@@@@@@ MO¯E BYÆ NA KOLOSIE @@@@@@@@@@@@@@@@
+
+mysql> select distinct region
+    -> from country
+    -> where
+    -> continent = "Europe";
++------------------+
+| region           |
++------------------+
+| Western Europe   |
+| Southern Europe  |
+| British Islands  |
+| Eastern Europe   |
+| Nordic Countries |
+| Baltic Countries |
++------------------+
+
+Rekordy bez powtórzeñ 
+@@@@@@@@@@@@@ MO¯E BYÆ NA KOLOSIE @@@@@@@@@@@@@@@@
+
+
+mysql> select count(distinct region) ile
+    -> from country
+    -> where
+    -> continent = 2;
++-----+
+| ile |
++-----+
+|   6 |
++-----+
+
+Zliczanie unikatowych rekordów (bez powtórzeñ) i wybieranie kontynentu po kolejnoœci w enumie;
+¯eby podejrzeæ enuma, to desc nazwa tabelki;
+
+mysql> select max(population) najw, min(population) najmn, avg(population) œr,
+    -> sum(population) suma, count(*) ile
+    -> from city;
++----------+-------+-------------+------------+------+
+| najw     | najmn | œr          | suma       | ile  |
++----------+-------+-------------+------------+------+
+| 10500000 |    42 | 350468.2236 | 1429559884 | 4079 |
++----------+-------+-------------+------------+------+
+
+ile to iloœæ miast, suma to suma mieszkañców;
+
+
+mysql> select region, count(*) ile
+    -> from country
+    -> where
+    -> continent = "europe"
+    -> group by region
+    -> order by 2, 1;
++------------------+-----+
+| region           | ile |
++------------------+-----+
+| British Islands  |   2 |
+| Baltic Countries |   3 |
+| Nordic Countries |   7 |
+| Western Europe   |   9 |
+| Eastern Europe   |  10 |
+| Southern Europe  |  15 |
++------------------+-----+
+
+Ile pañstw w jakim regionie europy;
+
+
+mysql> select region gdzie, count(*) ile
+    -> from country
+    -> where
+    -> continent = "europe"
+    -> group by gdzie
+    -> order by 2, 1;
++------------------+-----+
+| gdzie            | ile |
++------------------+-----+
+| British Islands  |   2 |
+| Baltic Countries |   3 |
+| Nordic Countries |   7 |
+| Western Europe   |   9 |
+| Eastern Europe   |  10 |
+| Southern Europe  |  15 |
++------------------+-----+
+
+Grupowanie po aliasie
+
+mysql> select region, count(*) ile
+    -> from country
+    -> where
+    -> continent = "europe"
+    -> group by 1;
++------------------+-----+
+| region           | ile |
++------------------+-----+
+| Baltic Countries |   3 |
+| British Islands  |   2 |
+| Eastern Europe   |  10 |
+| Nordic Countries |   7 |
+| Southern Europe  |  15 |
+| Western Europe   |   9 |
++------------------+-----+
+
+grupowanie po numerze kolumny czy coœ;
+
+
+
+mysql> use znajomi
+Zmiana gimbazy
+
+
+
+mysql> select p p³eæ, s stan, count(*) ile
+    -> from test
+    -> group by 1, 2;
++------+------+-----+
+| p³eæ | stan | ile |
++------+------+-----+
+| k    | w    |   1 |
+| k    | z    |   2 |
+| p    | w    |   3 |
+| p    | z    |   4 |
++------+------+-----+
+
+To samo polecenie co wczeœniej, tylko proœciej
+
+
+mysql> drop table test;
+exterminacja gimbazy;
+
+
+
+kody na P pañstw, liczbê miast w tym kraju, sumê mieszkañców miast danego kraju
+posortowaæ po iloœci miast, a potem po miejscowych
+
+mysql> select countrycode kod, count(*) "ile miast", sum(population) miastowi
+    -> from city
+    -> where
+    -> countrycode like "p%"
+    -> group by 1
+    -> order by 2, 3;
++-----+-----------+----------+
+| kod | ile miast | miastowi |
++-----+-----------+----------+
+| PCN |         1 |       42 |
+| PLW |         1 |    12000 |
+| PNG |         1 |   247000 |
+| PYF |         2 |    51441 |
+| PAN |         2 |   786755 |
+| PRY |         5 |  1020020 |
+| PRT |         5 |  1145011 |
+| PSE |         6 |   902360 |
+| PRI |         9 |  1564174 |
+| PRK |        13 |  6476751 |
+| PER |        22 | 12147242 |
+| POL |        44 | 11687431 |
+| PAK |        59 | 31546745 |
+| PHL |       136 | 30934791 |
++-----+-----------+----------+
+
+
+mysql> select count(*) ile
+    -> from country
+    -> where
+    -> name like "p%";
++-----+
+| ile |
++-----+
+|  12 |
++-----+
+Gwiazdka biega po wszystkich kolumnach
+
+
+mysql> select count(gnpold) ile
+    -> from country
+    -> where
+    -> name like "p%";
++-----+
+| ile |
++-----+
+|   9 |
++-----+
+
+Count nulli nie liczy, s¹ 3;
+
+
+kod kraju, liczbê miastowych
+liczba miastowych wiêksza od 10 000 000
+
+
+w group i order by mo¿na dawaæ numery i aliasy kolumn, ale w where maj¹ byæ warunki
+
+1e7 to 10^7 1*10^7
+
+
+mysql> select countrycode kod, sum(population) miastowi
+    -> from city
+    -> group by 1
+    -> having
+    -> sum(population) > 1e7
+    -> order by 2;
++-----+-----------+
+| kod | miastowi  |
++-----+-----------+
+| SAU |  10636700 |
+| AUS |  11313666 |
+| POL |  11687431 |
+| PER |  12147242 |
+| VEN |  12251091 |
+| CAN |  12673840 |
+| TWN |  13569336 |
+| ITA |  15087019 |
+| ZAF |  15196370 |
+| ESP |  16669189 |
+| NGA |  17366900 |
+| ARG |  19996563 |
+| UKR |  20074000 |
+| EGY |  20083079 |
+| COL |  20250990 |
+| GBR |  22436673 |
+| IRN |  26032990 |
+| DEU |  26245483 |
+| TUR |  28327028 |
+| PHL |  30934791 |
+| PAK |  31546745 |
+| IDN |  37485695 |
+| KOR |  38999893 |
+| MEX |  59752521 |
+| RUS |  69150700 |
+| JPN |  77965107 |
+| USA |  78625774 |
+| BRA |  85876862 |
+| IND | 123298526 |
+| CHN | 175953614 |
++-----+-----------+
+
+Dziwne popaprane rzeczy z having, inaczej nie przechodzi. Grupowanie z warunkiem na wynik grupowania musi byæ having.
+
+
+mysql> select countrycode kod, sum(population) miastowi
+    -> from city
+    -> where countrycode like "p%"
+    -> group by 1
+    -> having
+    -> sum(population) > 1e7
+    -> order by 2;
++-----+----------+
+| kod | miastowi |
++-----+----------+
+| POL | 11687431 |
+| PER | 12147242 |
+| PHL | 30934791 |
+| PAK | 31546745 |
++-----+----------+
+
+Mo¿na ³¹czyæ jedno z drugim, ale musi byæ kolejna i jak jest filtr, to filtr przez having.
+
+
+mysql> use znajomi
+Zmiana gimbazy
+
+
+mysql> select osoby.imie, telefony.numer
+    -> from osoby, telefony;
++--------+-----------+
+| imie   | numer     |
++--------+-----------+
+| Artur  | 321123321 |
+| Artur  | 123456789 |
+| Artur  | 987789987 |
+| Artur  | 567432121 |
+| Micha³ | 321123321 |
+| Micha³ | 123456789 |
+| Micha³ | 987789987 |
+| Micha³ | 567432121 |
+| Monika | 321123321 |
+| Monika | 123456789 |
+| Monika | 987789987 |
+| Monika | 567432121 |
+| Oliwia | 321123321 |
+| Oliwia | 123456789 |
+| Oliwia | 987789987 |
+| Oliwia | 567432121 |
+| Micha³ | 321123321 |
+| Micha³ | 123456789 |
+| Micha³ | 987789987 |
+| Micha³ | 567432121 |
++--------+-----------+
+
+
+mysql> select count(*) from lacznik;
++----------+
+| count(*) |
++----------+
+|        4 |
++----------+
+
+
+
+mysql> select osoby.imie, telefony.numer
+    -> from osoby, telefony
+    -> where
+    -> lacznik.id_o = osoby.id_o
+    -> and
+    -> lacznik.id_t = telefony.id_t;
+ERROR 1054 (42S22): Unknown column 'lacznik.id_o' in 'where clause'
+
+Trzeba do froma wpisac lacznik.
+
+
+
+mysql> select osoby.imie, telefony.numer
+    -> from osoby, telefony, lacznik
+    -> where
+    -> lacznik.id_o = osoby.id_o
+    -> and
+    -> lacznik.id_t = telefony.id_t;
++--------+-----------+
+| imie   | numer     |
++--------+-----------+
+| Artur  | 321123321 |
+| Micha³ | 567432121 |
+| Monika | 567432121 |
+| Oliwia | 123456789 |
++--------+-----------+
+
+Tera dzia³a
+
+
+mysql> select osoby.imie, osoby.miasto, osoby.wiek, telefony.numer, telefony.typ
+    -> from osoby, telefony, lacznik
+    -> where
+    -> lacznik.id_o = osoby.id_o
+    -> and
+    -> lacznik.id_t = telefony.id_t;
++--------+-----------------+------+-----------+-------------+
+| imie   | miasto          | wiek | numer     | typ         |
++--------+-----------------+------+-----------+-------------+
+| Artur  | Gliwice         |   31 | 321123321 | komorkowy   |
+| Micha³ | Tarnowskie Góry |   21 | 567432121 | stacjonarny |
+| Monika | Gliwice         |   12 | 567432121 | stacjonarny |
+| Oliwia | Knurów          |   34 | 123456789 | komorkowy   |
++--------+-----------------+------+-----------+-------------+
+
+Jakieœ inne hgw
+
+
+mysql> select imie, miasto, wiek, numer, typ
+    -> from osoby, telefony, lacznik
+    -> where
+    -> lacznik.id_o = osoby.id_o
+    -> and
+    -> lacznik.id_t = telefony.id_t;
++--------+-----------------+------+-----------+-------------+
+| imie   | miasto          | wiek | numer     | typ         |
++--------+-----------------+------+-----------+-------------+
+| Artur  | Gliwice         |   31 | 321123321 | komorkowy   |
+| Micha³ | Tarnowskie Góry |   21 | 567432121 | stacjonarny |
+| Monika | Gliwice         |   12 | 567432121 | stacjonarny |
+| Oliwia | Knurów          |   34 | 123456789 | komorkowy   |
++--------+-----------------+------+-----------+-------------+
+
+Jeœli nazwa kolumny jest unikatowa w ca³ej bazie, to nie trzeba jej poprzedzaæ nazw¹ tabeli.
+
+
+
+mysql> select imie, miasto, wiek, t.numer, typ
+    -> from osoby o, telefony t, lacznik
+
+Tak te¿ mo¿na
+
+nazwa kraju na P i nazwa jego stolicy
+
+
+
+mysql> select k.name kraj, m.name stolica
+    -> from country k, city m
+    -> where
+    -> k.name like "p%"
+    -> and
+    -> capital = id
+    -> order by 2 desc;
++------------------+------------------+
+| kraj             | stolica          |
++------------------+------------------+
+| Poland           | Warszawa         |
+| Puerto Rico      | San Juan         |
+| Papua New Guinea | Port Moresby     |
+| Philippines      | Manila           |
+| Portugal         | Lisboa           |
+| Peru             | Lima             |
+| Palau            | Koror            |
+| Pakistan         | Islamabad        |
+| Palestine        | Gaza             |
+| Panama           | Ciudad de Panamá |
+| Paraguay         | Asunción         |
+| Pitcairn         | Adamstown        |
++------------------+------------------+
+
+
+po³¹czenie wsztstkiego na raz.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

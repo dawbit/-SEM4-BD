@@ -1,0 +1,559 @@
+ile jest pañstw w danym kontynencie i w danym regionie
+
+
+mysql> select continent, region, count(*) ile
+    -> from country
+    -> group by 1, 2;
++---------------+---------------------------+-----+
+| continent     | region                    | ile |
++---------------+---------------------------+-----+
+| Asia          | Eastern Asia              |   8 |
+| Asia          | Middle East               |  18 |
+| Asia          | Southeast Asia            |  11 |
+| Asia          | Southern and Central Asia |  14 |
+| Europe        | Baltic Countries          |   3 |
+| Europe        | British Islands           |   2 |
+| Europe        | Eastern Europe            |  10 |
+| Europe        | Nordic Countries          |   7 |
+| Europe        | Southern Europe           |  15 |
+| Europe        | Western Europe            |   9 |
+| North America | Caribbean                 |  24 |
+| North America | Central America           |   8 |
+| North America | North America             |   5 |
+| Africa        | Central Africa            |   9 |
+| Africa        | Eastern Africa            |  20 |
+| Africa        | Northern Africa           |   7 |
+| Africa        | Southern Africa           |   5 |
+| Africa        | Western Africa            |  17 |
+| Oceania       | Australia and New Zealand |   5 |
+| Oceania       | Melanesia                 |   5 |
+| Oceania       | Micronesia                |   7 |
+| Oceania       | Micronesia/Caribbean      |   1 |
+| Oceania       | Polynesia                 |  10 |
+| Antarctica    | Antarctica                |   5 |
+| South America | South America             |  14 |
++---------------+---------------------------+-----+
+
+Eksperyment /|\
+	     |
+
+
+mysql> select continent, region, count(*) ile
+    -> from country
+    -> group by 1, 2
+    -> with rollup;
++---------------+---------------------------+-----+
+| continent     | region                    | ile |
++---------------+---------------------------+-----+
+| Asia          | Eastern Asia              |   8 |
+| Asia          | Middle East               |  18 |
+| Asia          | Southeast Asia            |  11 |
+| Asia          | Southern and Central Asia |  14 |
+| Asia          | NULL                      |  51 |
+| Europe        | Baltic Countries          |   3 |
+| Europe        | British Islands           |   2 |
+| Europe        | Eastern Europe            |  10 |
+| Europe        | Nordic Countries          |   7 |
+| Europe        | Southern Europe           |  15 |
+| Europe        | Western Europe            |   9 |
+| Europe        | NULL                      |  46 |
+| North America | Caribbean                 |  24 |
+| North America | Central America           |   8 |
+| North America | North America             |   5 |
+| North America | NULL                      |  37 |
+| Africa        | Central Africa            |   9 |
+| Africa        | Eastern Africa            |  20 |
+| Africa        | Northern Africa           |   7 |
+| Africa        | Southern Africa           |   5 |
+| Africa        | Western Africa            |  17 |
+| Africa        | NULL                      |  58 |
+| Oceania       | Australia and New Zealand |   5 |
+| Oceania       | Melanesia                 |   5 |
+| Oceania       | Micronesia                |   7 |
+| Oceania       | Micronesia/Caribbean      |   1 |
+| Oceania       | Polynesia                 |  10 |
+| Oceania       | NULL                      |  28 |
+| Antarctica    | Antarctica                |   5 |
+| Antarctica    | NULL                      |   5 |
+| South America | South America             |  14 |
+| South America | NULL                      |  14 |
+| NULL          | NULL                      | 239 |
++---------------+---------------------------+-----+
+
+przy nullach s¹ podsumowania (sumowania).
+
+
+mysql> select * from country
+    -> where code = "pol";
++------+--------+-----------+----------------+-------------+-----------+------------+----------------+-----------+-----------+-----------+----------------+------------------------+---------+-------+
+| Code | Name   | Continent | Region         | SurfaceArea | IndepYear | Population | LifeExpectancy | GNP       | GNPOld    | LocalName | GovernmentForm | HeadOfState            | Capital | Code2 |
++------+--------+-----------+----------------+-------------+-----------+------------+----------------+-----------+-----------+-----------+----------------+------------------------+---------+-------+
+| POL  | Poland | Europe    | Eastern Europe |   323250.00 |      1918 |   38653600 |           73.2 | 151697.00 | 135636.00 | Polska    | Republic       | Aleksander Kwasniewski |    2928 | PL    |
++------+--------+-----------+----------------+-------------+-----------+------------+----------------+-----------+-----------+-----------+----------------+------------------------+---------+-------+
+
+Informacje o Polsce
+
+
+mysql> select * from country
+    -> where code = binary "pol"\G
+Empty set (0.00 sec)
+
+Nie ma kodu pol z ma³ych liter, tylko POL
+
+
+kraj, stolica. Ostatnia litera nazwy stolicy jest dalej w alfabecie ni¿ pierwsza kraju.
+
+
+
+mysql> select k.name, c.name
+    -> from country as k, city as c
+    -> where
+    -> capital = id
+    -> and
+    -> right(c.name,1) > left(k.name,1)
+    -> order by 1;
++---------------------------------+-----------------------------------+
+| name                            | name                              |
++---------------------------------+-----------------------------------+
+| Afghanistan                     | Kabul                             |
+| Algeria                         | Alger                             |
+| American Samoa                  | Fagatogo                          |
+| Anguilla                        | The Valley                        |
+| Antigua and Barbuda             | Saint John´s                      |
+| Argentina                       | Buenos Aires                      |
+| Armenia                         | Yerevan                           |
+| Aruba                           | Oranjestad                        |
+| Austria                         | Wien                              |
+| Azerbaijan                      | Baku                              |
+| Bahamas                         | Nassau                            |
+| Barbados                        | Bridgetown                        |
+| Belarus                         | Minsk                             |
+| Belgium                         | Bruxelles [Brussel]               |
+| Belize                          | Belmopan                          |
+| Benin                           | Porto-Novo                        |
+| Bermuda                         | Hamilton                          |
+| Bhutan                          | Thimphu                           |
+| Bolivia                         | La Paz                            |
+| Bosnia and Herzegovina          | Sarajevo                          |
+| Botswana                        | Gaborone                          |
+| Brunei                          | Bandar Seri Begawan               |
+| Burkina Faso                    | Ouagadougou                       |
+| Cambodia                        | Phnom Penh                        |
+| Cameroon                        | Yaoundé                           |
+| Cayman Islands                  | George Town                       |
+| Central African Republic        | Bangui                            |
+| Chile                           | Santiago de Chile                 |
+| China                           | Peking                            |
+| Christmas Island                | Flying Fish Cove                  |
+| Cocos (Keeling) Islands         | West Island                       |
+| Comoros                         | Moroni                            |
+| Congo                           | Brazzaville                       |
+| Costa Rica                      | San José                          |
+| Côte d?Ivoire                   | Yamoussoukro                      |
+| Denmark                         | K?benhavn                         |
+| Djibouti                        | Djibouti                          |
+| Dominica                        | Roseau                            |
+| Dominican Republic              | Santo Domingo de Guzmán           |
+| East Timor                      | Dili                              |
+| Ecuador                         | Quito                             |
+| Egypt                           | Cairo                             |
+| El Salvador                     | San Salvador                      |
+| Equatorial Guinea               | Malabo                            |
+| Estonia                         | Tallinn                           |
+| Falkland Islands                | Stanley                           |
+| Faroe Islands                   | Tórshavn                          |
+| Finland                         | Helsinki [Helsingfors]            |
+| France                          | Paris                             |
+| Gambia                          | Banjul                            |
+| Georgia                         | Tbilisi                           |
+| Germany                         | Berlin                            |
+| Gibraltar                       | Gibraltar                         |
+| Greece                          | Athenai                           |
+| Greenland                       | Nuuk                              |
+| Grenada                         | Saint George´s                    |
+| Guinea                          | Conakry                           |
+| Guinea-Bissau                   | Bissau                            |
+| Guyana                          | Georgetown                        |
+| Holy See (Vatican City State)   | Citt? del Vaticano                |
+| Hungary                         | Budapest                          |
+| Iceland                         | Reykjavík                         |
+| Iran                            | Teheran                           |
+| Ireland                         | Dublin                            |
+| Israel                          | Jerusalem                         |
+| Jamaica                         | Kingston                          |
+| Japan                           | Tokyo                             |
+| Jordan                          | Amman                             |
+| Kuwait                          | Kuwait                            |
+| Lebanon                         | Beirut                            |
+| Lesotho                         | Maseru                            |
+| Liechtenstein                   | Vaduz                             |
+| Lithuania                       | Vilnius                           |
+| Luxembourg                      | Luxembourg [Luxemburg/Lëtzebuerg] |
+| Macao                           | Macao                             |
+| Madagascar                      | Antananarivo                      |
+| Malaysia                        | Kuala Lumpur                      |
+| Mali                            | Bamako                            |
+| Marshall Islands                | Dalap-Uliga-Darrit                |
+| Mauritania                      | Nouakchott                        |
+| Mauritius                       | Port-Louis                        |
+| Mayotte                         | Mamoutzou                         |
+| Mexico                          | Ciudad de México                  |
+| Micronesia, Federated States of | Palikir                           |
+| Moldova                         | Chisinau                          |
+| Mongolia                        | Ulan Bator                        |
+| Morocco                         | Rabat                             |
+| Mozambique                      | Maputo                            |
+| Nepal                           | Kathmandu                         |
+| Niger                           | Niamey                            |
+| Norway                          | Oslo                              |
+| Oman                            | Masqat                            |
+| Palau                           | Koror                             |
+| Papua New Guinea                | Port Moresby                      |
+| Réunion                         | Saint-Denis                       |
+| Russian Federation              | Moscow                            |
+| Somalia                         | Mogadishu                         |
+| Ukraine                         | Kyiv                              |
++---------------------------------+-----------------------------------+
+98 rows in set (0.00 sec)
+
+
+wyznacz powierzchniê kontynentów jako suma powierzchni krajów na nich le¿¹cych
+
+
+mysql> select continent, sum(surfacearea)
+    -> from country
+    -> group by 1;
++---------------+------------------+
+| continent     | sum(surfacearea) |
++---------------+------------------+
+| Asia          |      31881005.00 |
+| Europe        |      23049133.90 |
+| North America |      24214470.00 |
+| Africa        |      30250377.00 |
+| Oceania       |       8564294.00 |
+| Antarctica    |      13132101.00 |
+| South America |      17864926.00 |
++---------------+------------------+
+7 rows in set (0.00 sec)
+
+PAMIÊTAÆ O GROUP BY
+
+kraj, stolica, rok uzyskania niepodleg³oœci. Uzyskanie niepodleg³oœci w XXw.
+
+
+mysql> select country.name, city.name, country.indepyear
+    -> from country, city
+    -> where
+    -> capital = id
+    -> and
+    -> ((country.indepyear between 1901 and 2000) or (country.indepyear is null))
+    -> order by 3, 1;
++---------------------------------------+------------------------+-----------+
+| name                                  | name                   | indepyear |
++---------------------------------------+------------------------+-----------+
+| American Samoa                        | Fagatogo               |      NULL |
+| Anguilla                              | The Valley             |      NULL |
+| Aruba                                 | Oranjestad             |      NULL |
+| Bermuda                               | Hamilton               |      NULL |
+| Cayman Islands                        | George Town            |      NULL |
+| Christmas Island                      | Flying Fish Cove       |      NULL |
+| Cocos (Keeling) Islands               | West Island            |      NULL |
+| Cook Islands                          | Avarua                 |      NULL |
+| East Timor                            | Dili                   |      NULL |
+| Falkland Islands                      | Stanley                |      NULL |
+| Faroe Islands                         | Tórshavn               |      NULL |
+| French Guiana                         | Cayenne                |      NULL |
+| French Polynesia                      | Papeete                |      NULL |
+| Gibraltar                             | Gibraltar              |      NULL |
+| Greenland                             | Nuuk                   |      NULL |
+| Guadeloupe                            | Basse-Terre            |      NULL |
+| Guam                                  | Aga?a                  |      NULL |
+| Hong Kong                             | Victoria               |      NULL |
+| Macao                                 | Macao                  |      NULL |
+| Martinique                            | Fort-de-France         |      NULL |
+| Mayotte                               | Mamoutzou              |      NULL |
+| Montserrat                            | Plymouth               |      NULL |
+| Netherlands Antilles                  | Willemstad             |      NULL |
+| New Caledonia                         | Nouméa                 |      NULL |
+| Niue                                  | Alofi                  |      NULL |
+| Norfolk Island                        | Kingston               |      NULL |
+| Northern Mariana Islands              | Garapan                |      NULL |
+| Palestine                             | Gaza                   |      NULL |
+| Pitcairn                              | Adamstown              |      NULL |
+| Puerto Rico                           | San Juan               |      NULL |
+| Réunion                               | Saint-Denis            |      NULL |
+| Saint Helena                          | Jamestown              |      NULL |
+| Saint Pierre and Miquelon             | Saint-Pierre           |      NULL |
+| Svalbard and Jan Mayen                | Longyearbyen           |      NULL |
+| Tokelau                               | Fakaofo                |      NULL |
+| Turks and Caicos Islands              | Cockburn Town          |      NULL |
+| Virgin Islands, British               | Road Town              |      NULL |
+| Virgin Islands, U.S.                  | Charlotte Amalie       |      NULL |
+| Wallis and Futuna                     | Mata-Utu               |      NULL |
+| Western Sahara                        | El-Aaiún               |      NULL |
+| Australia                             | Canberra               |      1901 |
+| Cuba                                  | La Habana              |      1902 |
+| Panama                                | Ciudad de Panamá       |      1903 |
+| Norway                                | Oslo                   |      1905 |
+| Iran                                  | Teheran                |      1906 |
+| New Zealand                           | Wellington             |      1907 |
+| Bulgaria                              | Sofija                 |      1908 |
+| Bhutan                                | Thimphu                |      1910 |
+| South Africa                          | Pretoria               |      1910 |
+| Albania                               | Tirana                 |      1912 |
+| Finland                               | Helsinki [Helsingfors] |      1917 |
+| Austria                               | Wien                   |      1918 |
+| Hungary                               | Budapest               |      1918 |
+| Poland                                | Warszawa               |      1918 |
+| Yemen                                 | Sanaa                  |      1918 |
+| Yugoslavia                            | Beograd                |      1918 |
+| Afghanistan                           | Kabul                  |      1919 |
+| Ireland                               | Dublin                 |      1921 |
+| Mongolia                              | Ulan Bator             |      1921 |
+| Egypt                                 | Cairo                  |      1922 |
+| Turkey                                | Ankara                 |      1923 |
+| Holy See (Vatican City State)         | Citt? del Vaticano     |      1929 |
+| Iraq                                  | Baghdad                |      1932 |
+| Saudi Arabia                          | Riyadh                 |      1932 |
+| Lebanon                               | Beirut                 |      1941 |
+| Syria                                 | Damascus               |      1941 |
+| Iceland                               | Reykjavík              |      1944 |
+| Indonesia                             | Jakarta                |      1945 |
+| Taiwan                                | Taipei                 |      1945 |
+| Vietnam                               | Hanoi                  |      1945 |
+| Jordan                                | Amman                  |      1946 |
+| Philippines                           | Manila                 |      1946 |
+| India                                 | New Delhi              |      1947 |
+| Pakistan                              | Islamabad              |      1947 |
+| Israel                                | Jerusalem              |      1948 |
+| Myanmar                               | Rangoon (Yangon)       |      1948 |
+| North Korea                           | Pyongyang              |      1948 |
+| South Korea                           | Seoul                  |      1948 |
+| Sri Lanka                             | Colombo                |      1948 |
+| Libyan Arab Jamahiriya                | Tripoli                |      1951 |
+| Oman                                  | Masqat                 |      1951 |
+| Cambodia                              | Phnom Penh             |      1953 |
+| Laos                                  | Vientiane              |      1953 |
+| Germany                               | Berlin                 |      1955 |
+| Morocco                               | Rabat                  |      1956 |
+| Sudan                                 | Khartum                |      1956 |
+| Tunisia                               | Tunis                  |      1956 |
+| Ghana                                 | Accra                  |      1957 |
+| Malaysia                              | Kuala Lumpur           |      1957 |
+| Guinea                                | Conakry                |      1958 |
+| Benin                                 | Porto-Novo             |      1960 |
+| Burkina Faso                          | Ouagadougou            |      1960 |
+| Cameroon                              | Yaoundé                |      1960 |
+| Central African Republic              | Bangui                 |      1960 |
+| Chad                                  | N´Djaména              |      1960 |
+| Congo                                 | Brazzaville            |      1960 |
+| Congo, The Democratic Republic of the | Kinshasa               |      1960 |
+| Côte d?Ivoire                         | Yamoussoukro           |      1960 |
+| Cyprus                                | Nicosia                |      1960 |
+| Gabon                                 | Libreville             |      1960 |
+| Madagascar                            | Antananarivo           |      1960 |
+| Mali                                  | Bamako                 |      1960 |
+| Mauritania                            | Nouakchott             |      1960 |
+| Niger                                 | Niamey                 |      1960 |
+| Nigeria                               | Abuja                  |      1960 |
+| Senegal                               | Dakar                  |      1960 |
+| Somalia                               | Mogadishu              |      1960 |
+| Togo                                  | Lomé                   |      1960 |
+| Kuwait                                | Kuwait                 |      1961 |
+| Sierra Leone                          | Freetown               |      1961 |
+| Tanzania                              | Dodoma                 |      1961 |
+| Algeria                               | Alger                  |      1962 |
+| Burundi                               | Bujumbura              |      1962 |
+| Jamaica                               | Kingston               |      1962 |
+| Rwanda                                | Kigali                 |      1962 |
+| Samoa                                 | Apia                   |      1962 |
+| Trinidad and Tobago                   | Port-of-Spain          |      1962 |
+| Uganda                                | Kampala                |      1962 |
+| Kenya                                 | Nairobi                |      1963 |
+| Malawi                                | Lilongwe               |      1964 |
+| Malta                                 | Valletta               |      1964 |
+| Zambia                                | Lusaka                 |      1964 |
+| Gambia                                | Banjul                 |      1965 |
+| Maldives                              | Male                   |      1965 |
+| Singapore                             | Singapore              |      1965 |
+| Barbados                              | Bridgetown             |      1966 |
+| Botswana                              | Gaborone               |      1966 |
+| Guyana                                | Georgetown             |      1966 |
+| Lesotho                               | Maseru                 |      1966 |
+| Equatorial Guinea                     | Malabo                 |      1968 |
+| Mauritius                             | Port-Louis             |      1968 |
+| Nauru                                 | Yaren                  |      1968 |
+| Swaziland                             | Mbabane                |      1968 |
+| Fiji Islands                          | Suva                   |      1970 |
+| Tonga                                 | Nuku´alofa             |      1970 |
+| Bahrain                               | al-Manama              |      1971 |
+| Bangladesh                            | Dhaka                  |      1971 |
+| Qatar                                 | Doha                   |      1971 |
+| United Arab Emirates                  | Abu Dhabi              |      1971 |
+| Bahamas                               | Nassau                 |      1973 |
+| Grenada                               | Saint George´s         |      1974 |
+| Guinea-Bissau                         | Bissau                 |      1974 |
+| Angola                                | Luanda                 |      1975 |
+| Cape Verde                            | Praia                  |      1975 |
+| Comoros                               | Moroni                 |      1975 |
+| Mozambique                            | Maputo                 |      1975 |
+| Papua New Guinea                      | Port Moresby           |      1975 |
+| Sao Tome and Principe                 | S?o Tomé               |      1975 |
+| Suriname                              | Paramaribo             |      1975 |
+| Seychelles                            | Victoria               |      1976 |
+| Djibouti                              | Djibouti               |      1977 |
+| Dominica                              | Roseau                 |      1978 |
+| Solomon Islands                       | Honiara                |      1978 |
+| Tuvalu                                | Funafuti               |      1978 |
+| Kiribati                              | Bairiki                |      1979 |
+| Saint Lucia                           | Castries               |      1979 |
+| Saint Vincent and the Grenadines      | Kingstown              |      1979 |
+| Vanuatu                               | Port-Vila              |      1980 |
+| Zimbabwe                              | Harare                 |      1980 |
+| Antigua and Barbuda                   | Saint John´s           |      1981 |
+| Belize                                | Belmopan               |      1981 |
+| Saint Kitts and Nevis                 | Basseterre             |      1983 |
+| Brunei                                | Bandar Seri Begawan    |      1984 |
+| Marshall Islands                      | Dalap-Uliga-Darrit     |      1990 |
+| Micronesia, Federated States of       | Palikir                |      1990 |
+| Namibia                               | Windhoek               |      1990 |
+| Armenia                               | Yerevan                |      1991 |
+| Azerbaijan                            | Baku                   |      1991 |
+| Belarus                               | Minsk                  |      1991 |
+| Croatia                               | Zagreb                 |      1991 |
+| Estonia                               | Tallinn                |      1991 |
+| Georgia                               | Tbilisi                |      1991 |
+| Kazakstan                             | Astana                 |      1991 |
+| Kyrgyzstan                            | Bishkek                |      1991 |
+| Latvia                                | Riga                   |      1991 |
+| Lithuania                             | Vilnius                |      1991 |
+| Macedonia                             | Skopje                 |      1991 |
+| Moldova                               | Chisinau               |      1991 |
+| Russian Federation                    | Moscow                 |      1991 |
+| Slovenia                              | Ljubljana              |      1991 |
+| Tajikistan                            | Dushanbe               |      1991 |
+| Turkmenistan                          | Ashgabat               |      1991 |
+| Ukraine                               | Kyiv                   |      1991 |
+| Uzbekistan                            | Toskent                |      1991 |
+| Bosnia and Herzegovina                | Sarajevo               |      1992 |
+| Czech Republic                        | Praha                  |      1993 |
+| Eritrea                               | Asmara                 |      1993 |
+| Slovakia                              | Bratislava             |      1993 |
+| Palau                                 | Koror                  |      1994 |
++---------------------------------------+------------------------+-----------+
+189 rows in set (0.00 sec)
+
+d³ugoœæ nazwy kraju taka sama jak jêzyka urzêdowego, albo kraj nie ma jêzyka urzêdowego.
+
+mysql> select k.name kraj, language jêzyk
+    -> from country k left join countrylanguage j
+    -> on
+    -> code = j.countrycode
+    -> where
+    -> (isofficial = "t" and length(name) = length(language))
+    -> or
+    -> language is null;
++----------------------------------------------+------------+
+| kraj                                         | jêzyk      |
++----------------------------------------------+------------+
+| Andorra                                      | Catalan    |
+| Aruba                                        | Dutch      |
+| Bermuda                                      | English    |
+| Bolivia                                      | Spanish    |
+| Burundi                                      | Kirundi    |
+| Ecuador                                      | Spanish    |
+| India                                        | Hindi      |
+| Ireland                                      | English    |
+| Israel                                       | Arabic     |
+| Israel                                       | Hebrew     |
+| East Timor                                   | Portuguese |
+| Jordan                                       | Arabic     |
+| Canada                                       | French     |
+| Cape Verde                                   | Portuguese |
+| Kiribati                                     | Kiribati   |
+| Kuwait                                       | Arabic     |
+| Lesotho                                      | English    |
+| Monaco                                       | French     |
+| Myanmar                                      | Burmese    |
+| Nauru                                        | Nauru      |
+| Palau                                        | Palau      |
+| Poland                                       | Polish     |
+| France                                       | French     |
+| Rwanda                                       | French     |
+| Rwanda                                       | Rwanda     |
+| Finland                                      | Finnish    |
+| Finland                                      | Swedish    |
+| Tokelau                                      | English    |
+| Tuvalu                                       | Tuvalu     |
+| Uruguay                                      | Spanish    |
+| Belarus                                      | Russian    |
+| Vanuatu                                      | Bislama    |
+| Vanuatu                                      | English    |
+| Antarctica                                   | NULL       |
+| Bouvet Island                                | NULL       |
+| British Indian Ocean Territory               | NULL       |
+| South Georgia and the South Sandwich Islands | NULL       |
+| Heard Island and McDonald Islands            | NULL       |
+| French Southern territories                  | NULL       |
++----------------------------------------------+------------+
+39 rows in set (0.02 sec)
+
+
+kraj na p, najwiêksze miasto, najmniejsze miasto.
+
+
+mysql> select k.name kraj, m.name miastoDuze, c.name miastoMale
+    -> from country k, city m, city c
+    -> where
+    -> code = m.countrycode
+    -> and
+    -> code = c.countrycode
+    -> and
+    -> k.name like "p%"
+    -> and
+    -> m.population = (select max(population)
+    -> from city
+    -> where
+    -> m.countrycode = countrycode)
+    -> and
+    -> c.population = (select min(population)
+    -> from city
+    -> where
+    -> c.countrycode = countrycode)
+    -> order by 1;
++------------------+------------------+---------------------+
+| kraj             | miastoDuze       | miastoMale          |
++------------------+------------------+---------------------+
+| Pakistan         | Karachi          | Nowshera            |
+| Palau            | Koror            | Koror               |
+| Palestine        | Gaza             | Rafah               |
+| Panama           | Ciudad de Panamá | San Miguelito       |
+| Papua New Guinea | Port Moresby     | Port Moresby        |
+| Paraguay         | Asunción         | Fernando de la Mora |
+| Peru             | Lima             | Castilla            |
+| Philippines      | Quezon           | Ligao               |
+| Pitcairn         | Adamstown        | Adamstown           |
+| Poland           | Warszawa         | Jelenia Góra        |
+| Portugal         | Lisboa           | Braga               |
+| Puerto Rico      | San Juan         | Toa Baja            |
++------------------+------------------+---------------------+
+12 rows in set (1 min 0.57 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,3 @@
+Jedno zadanie na kolokwium z left lub right join
+Wypisz pañstwa, które nie maj¹ stolic? chyba
+Left wskazuje na rekord, który nie ma kolegów. Jak robisz left join, to prawa mo¿e byæ pusta.
